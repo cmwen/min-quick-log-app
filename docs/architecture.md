@@ -17,6 +17,13 @@ Additional modules (e.g., `core`, `feature-*`, `data`) can be added as needed. U
 - **GitHub Actions** for CI/CD pipelines
 - **Dependabot** for automated dependency updates
 
+### Feature-specific additions
+
+- **Room** provides persistent storage for tags, entries, and their relationships. The schema seeds a small tag graph so the app can surface sensible suggestions on first launch.
+- **ViewModel + Kotlin Flows** drive UI state (`QuickLogViewModel` combines recent tags, suggestions, entry history, and entry drafts into a single observable stream).
+- **Google Play Services Location** exposes the user's current position, which is reverse geocoded (when available) to enrich logs with a place label.
+- **Material 3 components** (chips, buttons, cards, toolbar) deliver a responsive light/dark UI without custom styling.
+
 ## Build Configuration
 
 - `compileSdk` / `targetSdk` set to 34 for Android 14 compatibility

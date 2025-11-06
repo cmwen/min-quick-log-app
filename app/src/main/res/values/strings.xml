@@ -1,5 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">AI-Aware Android Template</string>
-    <string name="hello_android">Hello, Android!</string>
+    <string name="app_name">Quick Log</string>
+    <string name="recent_tags">Recent tags</string>
+    <string name="suggested_tags">Suggested next tags</string>
+    <string name="selected_tags">Selected tags</string>
+    <string name="note_hint">Add quick notes (optional)</string>
+    <string name="save_entry">Save entry</string>
+    <string name="update_entry">Update entry</string>
+    <string name="clear_tags">Clear tags</string>
+    <string name="recent_entries">Recent entries</string>
+    <string name="location_unknown">Location unavailable</string>
+    <string name="use_location">Use location</string>
+    <string name="export_log">Export</string>
+    <string name="entry_saved">Entry saved</string>
+    <string name="entry_updated">Entry updated</string>
+    <string name="tap_to_edit">Tap to edit</string>
+    <string name="no_entries_message">No entries yet. Start tagging your moments.</string>
+    <string name="current_time">Now: %1$s</string>
+    <string name="editing_entry_time">Editing entry from %1$s</string>
+    <string name="share_entry">Share entry</string>
 </resources>

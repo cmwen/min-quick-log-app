@@ -1,47 +1,33 @@
-# Android Template Starter
+# Quick Log
 
-> TODO: Replace this block with a short summary of your application once you create a repository from the template.
+Quick Log is a lightweight Android 14+ companion for capturing what just happened without friction. Tap a few tags, let the app stamp the current time and location, optionally jot a short note, and save. Entries stay editable, organised, and export cleanly into Logseq-friendly text so you can remix the data for journaling, retros, or analytics.
 
-This repository is a template you can clone or fork to spin up an Android project with CI/CD, dependency automation, and agent-friendly documentation already wired in. Use the steps below to copy the template and tailor it to your product.
+## Key capabilities
 
-## Use This Template
+- Tag-first capture: recent and context-aware suggestions keep the most relevant people, actions, and moods one tap away.
+- Smart context: automatic timestamping, quick location lookup, and optional notes enrich each entry without slowing you down.
+- Fast recall: edit any entry from the history list, re-tag it, or update the note after the fact.
+- Simple exports: produce Logseq-compatible text with a single tap so your moments travel to whatever knowledge base you prefer.
+- Dark theme ready: Material 3 styling honours system light/dark settings out of the box.
 
-1. **Create a repository**
-   ```bash
-   gh repo create <your-org>/<your-app> --template <original-repo>
-   git clone git@github.com:<your-org>/<your-app>.git
-   cd <your-app>
-   ```
-2. **Run initial checks**
-   ```bash
-   ./gradlew lint testDebugUnitTest
-   ```
-3. **Review automation**
-   - `.github/workflows/ci.yml` runs linting, unit tests, and debug builds on every PR.
-   - `.github/workflows/release.yml` signs and publishes release artifacts when triggered.
-   - `.github/dependabot.yml` keeps Gradle dependencies and GitHub Actions current.
-4. **Configure secrets**
-   - Generate signing material with `keytool` (see `docs/secrets-management.md` for the recommended command).
-   - Upload values listed in `docs/secrets-management.md` as repository secrets or via your GitHub App.
-5. **Wire up agents**
-   - The `agents/` directory provides context, prompts, and recommended roles (`android-builder`, `ui-reviewer`, `release-shepherd`) to help AI coding assistants reason about the project.
-   - Update `agents/context.yaml`, `docs/agents-context.md`, and `AGENTS.md` with app-specific goals.
-6. **Customize documentation**
-   - `docs/architecture.md` for module design decisions.
-   - `docs/template-usage.md` for workflow and release instructions.
-   - `CONTRIBUTING.md` for team processes.
+## Getting started
 
-When you are ready, replace the placeholder text in this README with product-specific goals, features, and screenshots.
-
-## Project Layout
-
-```
-.
-├── app/                     # Android application module
-├── agents/                  # Agent context, prompts, and presets
-├── docs/                    # Extended documentation
-├── scripts/                 # Placeholder for custom automation scripts
-└── .github/workflows/       # GitHub Actions pipelines
+```bash
+./gradlew lint testDebugUnitTest
+./gradlew assembleDebug
 ```
 
-Additional guidance lives in `docs/template-usage.md`. Keep the documentation in sync with your code and automation as the project evolves.
+- Launch the debug build on an Android 14+ device or emulator.
+- Grant location access when prompted to enrich entries with a place label (falling back to coordinates if no reverse geocode is available).
+- Tap an existing entry to edit tags or notes; hold onto the Export action in the top bar to share your log as Markdown-style bullets.
+
+## Project layout
+
+```
+app/                     # Android application module (Room, ViewModel, UI)
+agents/                  # Agent context, prompts, and presets
+docs/                    # Extended documentation (architecture, workflows)
+scripts/                 # Hooks for automation and tooling
+```
+
+See `docs/architecture.md` for module-level decisions and `docs/template-usage.md` for CI/CD and release workflows. Keep documentation and automation updated as the product evolves.
