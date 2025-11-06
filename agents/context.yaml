@@ -1,0 +1,34 @@
+meta:
+  project_name: AI-Aware Android Template
+  owner: YOUR_ORG_or_TEAM
+  last_updated: 2024-06-13
+goals:
+  - Provide a secure, modern starting point for Android apps that consume AI services.
+  - Document conventions so automated tooling and contributors share the same context.
+  - Automate quality gates, releases, and dependency hygiene through GitHub Actions.
+non_goals:
+  - Shipping production-ready AI models or API integrations.
+  - Managing Play Store uploads; integrate separately as needed.
+  - Maintaining legacy Android API levels below 24.
+guardrails:
+  - Never commit API keys, tokens, or keystore files.
+  - Validate AI-generated code with tests and human review before merging.
+  - Ensure user data is collected and stored in compliance with privacy policies.
+references:
+  architecture: docs/architecture.md
+  agents_context_guide: docs/agents-context.md
+  secrets: docs/secrets-management.md
+agents_catalog:
+  - id: android-builder
+    goal: Keep builds green, manage Gradle updates, and enforce lint/test gates.
+    entry_prompts:
+      - agents/prompts/coding.md
+  - id: ui-reviewer
+    goal: Audit layouts for accessibility, responsiveness, and Material compliance.
+    entry_prompts:
+      - agents/prompts/ui.md
+  - id: release-shepherd
+    goal: Prepare version metadata, validate signing configuration, and operate release workflows.
+    entry_prompts:
+      - docs/template-usage.md
+      - docs/secrets-management.md

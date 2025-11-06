@@ -1,0 +1,39 @@
+{
+  "name": "AI-Aware Android Template",
+  "build": {
+    "dockerfile": "Dockerfile"
+  },
+  "features": {
+    "ghcr.io/devcontainers/features/node:1": {
+      "version": "20"
+    }
+  },
+  "containerEnv": {
+    "ANDROID_HOME": "/opt/android-sdk",
+    "ANDROID_SDK_ROOT": "/opt/android-sdk",
+    "JAVA_HOME": "/usr/lib/jvm/java-17-openjdk-amd64"
+  },
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "ms-androidtools.vscode-android",
+        "ms-azuretools.vscode-docker",
+        "ms-vscode-remote.remote-containers",
+        "esbenp.prettier-vscode",
+        "redhat.vscode-yaml"
+      ],
+      "settings": {
+        "java.configuration.runtimes": [
+          {
+            "name": "JavaSE-17",
+            "path": "/usr/lib/jvm/java-17-openjdk-amd64"
+          }
+        ],
+        "gradle.java.home": "/usr/lib/jvm/java-17-openjdk-amd64",
+        "editor.formatOnSave": true
+      }
+    }
+  },
+  "remoteUser": "vscode",
+  "updateContentCommand": "./gradlew --version"
+}

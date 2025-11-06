@@ -1,0 +1,41 @@
+name: Feature Proposal
+description: Suggest a new capability or improvement for the template
+labels:
+  - enhancement
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for proposing an enhancement! Use this form to capture context for the change.
+  - type: input
+    id: summary
+    attributes:
+      label: Summary
+      description: Short description of the feature
+      placeholder: Automate Play Store deployment
+    validations:
+      required: true
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem statement
+      description: What problem does this solve and for whom?
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed solution
+      description: Outline the approach, including changes to architecture, tooling, or docs
+    validations:
+      required: true
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives considered
+      description: Mention other options you explored
+  - type: textarea
+    id: context
+    attributes:
+      label: Additional context
+      description: Links to spikes, prototypes, or related discussions

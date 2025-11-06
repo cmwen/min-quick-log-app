@@ -1,0 +1,63 @@
+name: Bug Report
+description: Report reproducible defects to keep the template stable
+labels:
+  - bug
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to file a bug! Please provide as much detail as possible so we can reproduce the issue quickly.
+  - type: input
+    id: summary
+    attributes:
+      label: Summary
+      description: One-sentence description of the bug
+      placeholder: Release workflow fails with missing signing config
+    validations:
+      required: true
+  - type: textarea
+    id: reproduce
+    attributes:
+      label: Steps to reproduce
+      description: Share the exact steps or commands you ran
+      placeholder: |
+        1. …
+        2. …
+        3. …
+    validations:
+      required: true
+  - type: textarea
+    id: expected_behavior
+    attributes:
+      label: Expected behavior
+      description: What should have happened?
+    validations:
+      required: true
+  - type: textarea
+    id: actual_behavior
+    attributes:
+      label: Actual behavior
+      description: What actually happened?
+    validations:
+      required: true
+  - type: textarea
+    id: logs
+    attributes:
+      label: Logs or screenshots
+      description: Paste relevant logs, stack traces, or include screenshots
+      render: shell
+  - type: dropdown
+    id: impact
+    attributes:
+      label: Impact
+      options:
+        - Blocks release
+        - Degrades functionality
+        - Minor annoyance
+    validations:
+      required: true
+  - type: textarea
+    id: context
+    attributes:
+      label: Additional context
+      description: Links to related issues, PRs, or documentation

@@ -1,0 +1,56 @@
+name: Android CI
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    env:
+      JAVA_VERSION: "17"
+      ANDROID_API_LEVEL: "34"
+      ANDROID_BUILD_TOOLS: "34.0.0"
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5
+
+      - name: Setup Java
+        uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: ${{ env.JAVA_VERSION }}
+
+      - name: Setup Android SDK
+        uses: android-actions/setup-android@v3
+        with:
+          api-level: ${{ env.ANDROID_API_LEVEL }}
+          build-tools: ${{ env.ANDROID_BUILD_TOOLS }}
+          target: android-${{ env.ANDROID_API_LEVEL }}
+          cache: true
+
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v5
+        with:
+          gradle-home-cache-includes: |
+            caches
+            notifications
+            jdks
+
+      - name: Run static checks
+        run: ./gradlew --stacktrace --no-daemon lint
+
+      - name: Run unit tests
+        run: ./gradlew --stacktrace --no-daemon testDebugUnitTest
+
+      - name: Build debug APK
+        run: ./gradlew --stacktrace --no-daemon assembleDebug
