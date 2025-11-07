@@ -22,6 +22,8 @@ import com.example.minandroidapp.model.LogTag
 import com.example.minandroidapp.model.QuickLogEvent
 import com.example.minandroidapp.ui.EntryAdapter
 import com.example.minandroidapp.ui.QuickLogViewModel
+import com.example.minandroidapp.ui.entries.EntriesOverviewActivity
+import com.example.minandroidapp.ui.tag.TagManagerActivity
 import com.google.android.material.chip.Chip
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
@@ -88,6 +90,18 @@ class MainActivity : AppCompatActivity() {
             when (item.itemId) {
                 R.id.action_export -> {
                     exportLog()
+                    true
+                }
+                R.id.action_export_csv -> {
+                    exportCsv()
+                    true
+                }
+                R.id.action_manage_tags -> {
+                    openTagManager()
+                    true
+                }
+                R.id.action_entries_overview -> {
+                    openEntriesOverview()
                     true
                 }
                 else -> false
@@ -285,17 +299,41 @@ class MainActivity : AppCompatActivity() {
         val shareIntent = Intent(Intent.ACTION_SEND).apply {
             type = "text/plain"
             putExtra(Intent.EXTRA_TEXT, text)
+            putExtra(Intent.EXTRA_HTML_TEXT, viewModel.exportLogAsHtml())
         }
         startActivity(Intent.createChooser(shareIntent, getString(R.string.export_log)))
     }
 
     private fun shareEntry(entry: LogEntry) {
-        val text = viewModel.exportEntry(entry)
+        val payload = viewModel.exportEntry(entry)
         val shareIntent = Intent(Intent.ACTION_SEND).apply {
             type = "text/plain"
-            putExtra(Intent.EXTRA_TEXT, text)
+            putExtra(Intent.EXTRA_TEXT, payload.plain)
+            putExtra(Intent.EXTRA_HTML_TEXT, payload.html)
         }
         startActivity(Intent.createChooser(shareIntent, getString(R.string.share_entry)))
+    }
+
+    private fun exportCsv() {
+        val csv = viewModel.exportEntriesCsv()
+        if (csv.isBlank()) {
+            showMessage(getString(R.string.no_entries_message))
+            return
+        }
+        val shareIntent = Intent(Intent.ACTION_SEND).apply {
+            type = "text/csv"
+            putExtra(Intent.EXTRA_TEXT, csv)
+            putExtra(Intent.EXTRA_SUBJECT, "quick-log.csv")
+        }
+        startActivity(Intent.createChooser(shareIntent, getString(R.string.export_csv)))
+    }
+
+    private fun openTagManager() {
+        startActivity(Intent(this, TagManagerActivity::class.java))
+    }
+
+    private fun openEntriesOverview() {
+        startActivity(Intent(this, EntriesOverviewActivity::class.java))
     }
 
     private fun showCreateTagDialog() {

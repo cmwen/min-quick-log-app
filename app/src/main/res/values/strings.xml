@@ -12,6 +12,7 @@
     <string name="location_unknown">Location unavailable</string>
     <string name="use_location">Use location</string>
     <string name="export_log">Export</string>
+    <string name="export_csv">Export CSV</string>
     <string name="entry_saved">Entry saved</string>
     <string name="entry_updated">Entry updated</string>
     <string name="tap_to_edit">Tap to edit</string>
@@ -19,10 +20,26 @@
     <string name="current_time">Now: %1$s</string>
     <string name="editing_entry_time">Editing entry from %1$s</string>
     <string name="share_entry">Share entry</string>
+    <string name="manage_tags">Manage tags</string>
+    <string name="entries_overview">Entries overview</string>
     <string name="new_tag">New tag</string>
     <string name="new_tag_hint">Label (e.g. Coffee with Sam)</string>
     <string name="new_tag_dialog_title">Create tag</string>
     <string name="new_tag_dialog_confirm">Create</string>
     <string name="new_tag_created">Added %1$s</string>
     <string name="new_tag_error">Unable to create tag</string>
+    <string name="tag_manager_title">Tag map</string>
+    <string name="tag_connections">Related tags</string>
+    <string name="edit_connections">Edit connections</string>
+    <string name="tag_link_dialog_title">Connect %1$s</string>
+    <string name="tag_link_dialog_message">Select tags to relate</string>
+    <string name="entries_tab_date">Date</string>
+    <string name="entries_tab_location">Location</string>
+    <string name="entries_tab_tags">Tags</string>
+    <string name="entries_tab_stats">Stats</string>
+    <string name="entries_search_hint">Search tags…</string>
+    <string name="entries_stats_total">Entries: %1$d</string>
+    <string name="entries_stats_unique_tags">Unique tags: %1$d</string>
+    <string name="entries_stats_top_tag">Top tag: %1$s (%2$d)</string>
+    <string name="entries_stats_avg_daily">Avg per day: %1$.1f</string>
 </resources>

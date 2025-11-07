@@ -5,14 +5,17 @@ import com.example.minandroidapp.data.db.LogDatabase
 import com.example.minandroidapp.data.db.entities.EntryEntity
 import com.example.minandroidapp.data.db.entities.EntryTagCrossRef
 import com.example.minandroidapp.data.db.entities.TagEntity
+import com.example.minandroidapp.data.db.entities.TagLinkEntity
 import com.example.minandroidapp.data.mappers.toModel
 import com.example.minandroidapp.model.EntryLocation
 import com.example.minandroidapp.model.LogEntry
 import com.example.minandroidapp.model.LogTag
 import com.example.minandroidapp.model.TagCategory
+import com.example.minandroidapp.model.TagRelations
 import java.time.Instant
 import java.util.UUID
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.map
 
 class QuickLogRepository(private val database: LogDatabase) {
@@ -109,5 +112,68 @@ class QuickLogRepository(private val database: LogDatabase) {
         )
         tagDao.insertTag(tag)
         return tag.toModel()
+    }
+
+    fun observeTagRelations(): Flow<List<TagRelations>> {
+        return combine(tagDao.observeAllTags(), tagDao.observeLinks()) { tags, links ->
+            val tagMap = tags.associateBy { it.id }
+            val adjacency = links.groupBy({ it.parentTagId }, { it.childTagId })
+            tags.map { tag ->
+                val related = adjacency[tag.id]
+                    ?.mapNotNull { childId -> tagMap[childId]?.toModel() }
+                    ?.sortedBy { it.label }
+                    ?: emptyList()
+                TagRelations(tag = tag.toModel(), related = related)
+            }
+        }
+    }
+
+    suspend fun updateTagRelations(tagId: String, desiredIds: Set<String>) {
+        val current = tagDao.getAllLinks()
+            .filter { it.parentTagId == tagId }
+            .map { it.childTagId }
+            .toSet()
+        val toAdd = desiredIds - current
+        val toRemove = current - desiredIds
+        database.withTransaction {
+            toAdd.forEach { childId ->
+                tagDao.insertLink(TagLinkEntity(parentTagId = tagId, childTagId = childId))
+                tagDao.insertLink(TagLinkEntity(parentTagId = childId, childTagId = tagId))
+            }
+            toRemove.forEach { childId ->
+                tagDao.deleteLink(tagId, childId)
+                tagDao.deleteLink(childId, tagId)
+            }
+        }
+    }
+
+    fun searchEntriesByTags(selectedTagIds: Set<String>): Flow<List<LogEntry>> {
+        if (selectedTagIds.isEmpty()) {
+            return observeEntries()
+        }
+        return observeEntries().map { entries ->
+            entries.filter { entry ->
+                entry.tags.any { selectedTagIds.contains(it.id) }
+            }
+        }
+    }
+
+    fun exportEntriesAsCsv(entries: List<LogEntry>): String {
+        val header = "timestamp,location,tags,note"
+        val rows = entries.joinToString(separator = "\n") { entry ->
+            val timestamp = entry.createdAt.toString()
+            val location = entry.location.label?.replace(",", " ") ?: ""
+            val tags = entry.tags.joinToString(separator = "|") { it.label.replace(",", " ") }
+            val note = entry.note?.replace(",", " ")?.replace("\n", " ") ?: ""
+            listOf(timestamp, location, tags, note)
+                .joinToString(separator = ",") { value ->
+                    if (value.contains("\"") || value.contains(",")) {
+                        "\"" + value.replace("\"", "\"\"") + "\""
+                    } else {
+                        value
+                    }
+                }
+        }
+        return header + "\n" + rows
     }
 }

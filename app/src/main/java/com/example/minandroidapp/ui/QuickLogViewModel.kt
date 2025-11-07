@@ -6,6 +6,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.minandroidapp.data.QuickLogRepository
 import com.example.minandroidapp.model.EntryDraft
 import com.example.minandroidapp.model.EntryLocation
+import com.example.minandroidapp.model.EntrySharePayload
 import com.example.minandroidapp.model.LogEntry
 import com.example.minandroidapp.model.LogTag
 import com.example.minandroidapp.model.QuickLogEvent
@@ -209,10 +210,27 @@ class QuickLogViewModel(private val repository: QuickLogRepository) : ViewModel(
         if (entries.isEmpty()) {
             return ""
         }
-        return entries.joinToString(separator = "\n") { formatEntry(it) }
+        return entries.joinToString(separator = "\n") { formatEntryText(it) }
     }
 
-    fun exportEntry(entry: LogEntry): String = formatEntry(entry)
+    fun exportLogAsHtml(): String {
+        val entries = uiState.value.entries
+        if (entries.isEmpty()) {
+            return ""
+        }
+        return entries.joinToString(separator = "") { formatEntryHtml(it) }
+    }
+
+    fun exportEntry(entry: LogEntry): EntrySharePayload {
+        return EntrySharePayload(
+            plain = formatEntryText(entry),
+            html = formatEntryHtml(entry),
+        )
+    }
+
+    fun exportEntriesCsv(): String {
+        return repository.exportEntriesAsCsv(uiState.value.entries)
+    }
 
     fun createCustomTag(label: String) {
         val trimmed = label.trim()
@@ -259,19 +277,29 @@ class QuickLogViewModel(private val repository: QuickLogRepository) : ViewModel(
         }
     }
 
-    private fun formatEntry(entry: LogEntry): String {
+    private fun formatEntryText(entry: LogEntry): String {
         val timestamp = exportFormatter.format(entry.createdAt)
-        val tagsBlock = entry.tags.joinToString(separator = ", ") { tag -> "[[${tag.label}]]" }
-        return buildString {
-            append("- ").append(timestamp)
-            append(" :: tags:: ").append(tagsBlock)
-            entry.location.label?.let { label ->
-                append(" location:: ").append(label)
-            }
-            entry.note?.takeIf { it.isNotBlank() }?.let { note ->
-                append(" note:: ").append(note)
-            }
-        }
+        val tagsBlock = entry.tags.joinToString(separator = ", ") { it.label }
+        val location = entry.location.label?.let { " • location: $it" } ?: ""
+        val note = entry.note?.takeIf { it.isNotBlank() }?.let { " • note: $it" } ?: ""
+        return "- $timestamp • tags: $tagsBlock$location$note"
+    }
+
+    private fun formatEntryHtml(entry: LogEntry): String {
+        val timestamp = exportFormatter.format(entry.createdAt)
+        val tagsBlock = entry.tags.joinToString(separator = ", ") { it.label }
+        val location = entry.location.label?.let { "<br/><strong>Location:</strong> $it" } ?: ""
+        val note = entry.note?.takeIf { it.isNotBlank() }?.let { "<br/><strong>Note:</strong> ${escapeHtml(it)}" } ?: ""
+        return """<p><strong>$timestamp</strong><br/><strong>Tags:</strong> $tagsBlock$location$note</p>"""
+    }
+
+    private fun escapeHtml(value: String): String {
+        return value
+            .replace("&", "&amp;")
+            .replace("<", "&lt;")
+            .replace(">", "&gt;")
+            .replace("\"", "&quot;")
+            .replace("'", "&#39;")
     }
 }
 

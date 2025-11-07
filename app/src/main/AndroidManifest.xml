@@ -19,6 +19,14 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <activity
+            android:name="com.example.minandroidapp.ui.tag.TagManagerActivity"
+            android:exported="false" />
+
+        <activity
+            android:name="com.example.minandroidapp.ui.entries.EntriesOverviewActivity"
+            android:exported="false" />
     </application>
 
 </manifest>

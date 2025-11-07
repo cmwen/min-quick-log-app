@@ -8,4 +8,19 @@
         android:title="@string/export_log"
         app:showAsAction="ifRoom" />
 
+    <item
+        android:id="@+id/action_export_csv"
+        android:title="@string/export_csv"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/action_entries_overview"
+        android:title="@string/entries_overview"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/action_manage_tags"
+        android:title="@string/manage_tags"
+        app:showAsAction="never" />
+
 </menu>
