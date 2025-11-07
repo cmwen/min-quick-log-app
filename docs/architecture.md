@@ -23,6 +23,7 @@ Additional modules (e.g., `core`, `feature-*`, `data`) can be added as needed. U
 - **ViewModel + Kotlin Flows** drive UI state (`QuickLogViewModel` combines recent tags, suggestions, entry history, and entry drafts into a single observable stream).
 - **Google Play Services Location** exposes the user's current position, which is reverse geocoded (when available) to enrich logs with a place label.
 - **Material 3 components** (chips, buttons, cards, toolbar) deliver a responsive light/dark UI without custom styling.
+- **Branding assets** live in `design/` (SVG source) and `app/src/main/res/drawable/` (VectorDrawable) so the same iconography can be reused for launchers or marketing material.
 
 ## Build Configuration
 

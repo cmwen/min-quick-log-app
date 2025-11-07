@@ -6,4 +6,5 @@ enum class TagCategory {
     CONTEXT,
     PLACE,
     MOOD,
+    CUSTOM,
 }

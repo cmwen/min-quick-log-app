@@ -19,4 +19,10 @@
     <string name="current_time">Now: %1$s</string>
     <string name="editing_entry_time">Editing entry from %1$s</string>
     <string name="share_entry">Share entry</string>
+    <string name="new_tag">New tag</string>
+    <string name="new_tag_hint">Label (e.g. Coffee with Sam)</string>
+    <string name="new_tag_dialog_title">Create tag</string>
+    <string name="new_tag_dialog_confirm">Create</string>
+    <string name="new_tag_created">Added %1$s</string>
+    <string name="new_tag_error">Unable to create tag</string>
 </resources>

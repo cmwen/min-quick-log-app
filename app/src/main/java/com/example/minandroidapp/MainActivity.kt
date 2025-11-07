@@ -23,7 +23,9 @@ import com.example.minandroidapp.model.QuickLogEvent
 import com.example.minandroidapp.ui.EntryAdapter
 import com.example.minandroidapp.ui.QuickLogViewModel
 import com.google.android.material.chip.Chip
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
+import com.google.android.material.textfield.TextInputEditText
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 import java.util.Locale
@@ -105,6 +107,9 @@ class MainActivity : AppCompatActivity() {
         binding.clearTagsButton.setOnClickListener {
             viewModel.clearTags()
         }
+        binding.newTagButton.setOnClickListener {
+            showCreateTagDialog()
+        }
         binding.saveButton.setOnClickListener {
             viewModel.saveEntry()
         }
@@ -175,6 +180,9 @@ class MainActivity : AppCompatActivity() {
                         binding.contentScroll.smoothScrollTo(0, 0)
                     }
                     is QuickLogEvent.Error -> showMessage(event.message)
+                    is QuickLogEvent.CustomTagCreated -> showMessage(
+                        getString(R.string.new_tag_created, event.label),
+                    )
                 }
             }
         }
@@ -288,6 +296,23 @@ class MainActivity : AppCompatActivity() {
             putExtra(Intent.EXTRA_TEXT, text)
         }
         startActivity(Intent.createChooser(shareIntent, getString(R.string.share_entry)))
+    }
+
+    private fun showCreateTagDialog() {
+        val dialogView = layoutInflater.inflate(R.layout.dialog_create_tag, null)
+        val input = dialogView.findViewById<TextInputEditText>(R.id.newTagInput)
+        MaterialAlertDialogBuilder(this)
+            .setTitle(R.string.new_tag_dialog_title)
+            .setView(dialogView)
+            .setPositiveButton(R.string.new_tag_dialog_confirm) { _, _ ->
+                val label = input?.text?.toString().orEmpty()
+                viewModel.createCustomTag(label)
+            }
+            .setNegativeButton(android.R.string.cancel, null)
+            .show()
+        input?.post {
+            input.requestFocus()
+        }
     }
 
     private fun showMessage(message: String) {

@@ -43,6 +43,9 @@ interface TagDao {
     suspend fun insertTags(tags: List<TagEntity>)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertTag(tag: TagEntity)
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertLinks(links: List<TagLinkEntity>)
 
     @Query(

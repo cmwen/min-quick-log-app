@@ -4,11 +4,14 @@ import androidx.room.withTransaction
 import com.example.minandroidapp.data.db.LogDatabase
 import com.example.minandroidapp.data.db.entities.EntryEntity
 import com.example.minandroidapp.data.db.entities.EntryTagCrossRef
+import com.example.minandroidapp.data.db.entities.TagEntity
 import com.example.minandroidapp.data.mappers.toModel
 import com.example.minandroidapp.model.EntryLocation
 import com.example.minandroidapp.model.LogEntry
 import com.example.minandroidapp.model.LogTag
+import com.example.minandroidapp.model.TagCategory
 import java.time.Instant
+import java.util.UUID
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
@@ -93,5 +96,18 @@ class QuickLogRepository(private val database: LogDatabase) {
             entryDao.deleteEntryTags(entryId)
             entryDao.deleteEntry(entryId)
         }
+    }
+
+    suspend fun createCustomTag(label: String): LogTag {
+        val trimmed = label.trim()
+        require(trimmed.isNotEmpty()) { "Tag label cannot be empty" }
+        val tag = TagEntity(
+            id = "user_${UUID.randomUUID()}",
+            label = trimmed,
+            category = TagCategory.CUSTOM,
+            lastUsedAt = Instant.now(),
+        )
+        tagDao.insertTag(tag)
+        return tag.toModel()
     }
 }

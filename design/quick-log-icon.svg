@@ -1,0 +1,17 @@
+<svg width="512" height="512" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Quick Log icon">
+  <defs>
+    <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#4F46E5" />
+      <stop offset="100%" stop-color="#22D3EE" />
+    </linearGradient>
+    <linearGradient id="accent" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#FDE68A" />
+      <stop offset="100%" stop-color="#F97316" />
+    </linearGradient>
+  </defs>
+  <rect width="512" height="512" rx="128" fill="#0F172A" />
+  <circle cx="256" cy="256" r="200" fill="url(#gradient)" />
+  <path d="M256 120c-75 0-136 61-136 136s61 136 136 136 136-61 136-136-61-136-136-136zm0 24c62 0 112 50 112 112s-50 112-112 112-112-50-112-112 50-112 112-112z" fill="#EEF2FF" opacity="0.65" />
+  <path d="M256 160a24 24 0 0 1 24 24v54l58 33a24 24 0 1 1-24 42l-70-40a24 24 0 0 1-12-21v-68a24 24 0 0 1 24-24z" fill="#F8FAFC" />
+  <path d="M166 330c32 36 78 58 130 58 14 0 28-1 42-5l-30 48a24 24 0 0 1-20 11h-127a24 24 0 0 1-21-36l26-45z" fill="url(#accent)" />
+</svg>

@@ -214,6 +214,26 @@ class QuickLogViewModel(private val repository: QuickLogRepository) : ViewModel(
 
     fun exportEntry(entry: LogEntry): String = formatEntry(entry)
 
+    fun createCustomTag(label: String) {
+        val trimmed = label.trim()
+        if (trimmed.isEmpty()) {
+            viewModelScope.launch {
+                eventsFlow.emit(QuickLogEvent.Error("Tag name cannot be empty"))
+            }
+            return
+        }
+
+        viewModelScope.launch {
+            try {
+                val tag = repository.createCustomTag(trimmed)
+                toggleTag(tag)
+                eventsFlow.emit(QuickLogEvent.CustomTagCreated(tag.label))
+            } catch (error: Exception) {
+                eventsFlow.emit(QuickLogEvent.Error(error.message ?: "Unable to create tag"))
+            }
+        }
+    }
+
     private fun startClockTicker() {
         tickerJob?.cancel()
         tickerJob = viewModelScope.launch {
