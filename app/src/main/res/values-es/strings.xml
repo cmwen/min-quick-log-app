@@ -47,4 +47,10 @@
     <string name="entries_stats_avg_daily">Promedio por día: %1$.1f</string>
     <string name="drawer_open">Abrir navegación</string>
     <string name="drawer_close">Cerrar navegación</string>
+    <string name="tab_record">Registrar</string>
+    <string name="import_tags">Importar etiquetas (CSV)</string>
+    <string name="export_tags">Exportar etiquetas (CSV)</string>
+    <string name="import_tags_success">Se importaron %1$d etiquetas</string>
+    <string name="import_tags_failure">No se pudieron importar las etiquetas</string>
+    <string name="export_tags_success">Etiquetas exportadas</string>
 </resources>

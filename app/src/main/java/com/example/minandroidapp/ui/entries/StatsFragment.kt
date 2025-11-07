@@ -8,6 +8,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import com.example.minandroidapp.databinding.FragmentEntriesStatsBinding
+import com.example.minandroidapp.ui.entries.EntriesOverviewActivity
 import kotlinx.coroutines.launch
 
 class StatsFragment : Fragment() {

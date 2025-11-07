@@ -47,4 +47,10 @@
     <string name="entries_stats_avg_daily">Avg per day: %1$.1f</string>
     <string name="drawer_open">Open navigation</string>
     <string name="drawer_close">Close navigation</string>
+    <string name="tab_record">Record</string>
+    <string name="import_tags">Import tags (CSV)</string>
+    <string name="export_tags">Export tags (CSV)</string>
+    <string name="import_tags_success">Imported %1$d tags</string>
+    <string name="import_tags_failure">Unable to import tags</string>
+    <string name="export_tags_success">Tags exported</string>
 </resources>

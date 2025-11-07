@@ -176,4 +176,87 @@ class QuickLogRepository(private val database: LogDatabase) {
         }
         return header + "\n" + rows
     }
+
+    suspend fun exportTagsCsv(): String {
+        val tags = tagDao.getAllTags()
+        val links = tagDao.getAllLinks()
+        val related = links.groupBy { it.parentTagId }
+            .mapValues { entry -> entry.value.map { it.childTagId }.toSet() }
+        return buildString {
+            append("id,label,category,related_ids\n")
+            tags.forEach { tag ->
+                val relatedIds = related[tag.id]?.joinToString(separator = "|") ?: ""
+                append(tag.id.escapeCsv()).append(',')
+                    .append(tag.label.escapeCsv()).append(',')
+                    .append(tag.category.name.escapeCsv()).append(',')
+                    .append(relatedIds.escapeCsv())
+                    .append('\n')
+            }
+        }
+    }
+
+    suspend fun importTagsCsv(csv: String): Int {
+        val lines = csv.lineSequence()
+            .drop(1)
+            .filter { it.isNotBlank() }
+            .toList()
+        if (lines.isEmpty()) return 0
+
+        val tags = mutableListOf<TagEntity>()
+        val links = mutableListOf<Pair<String, String>>()
+        lines.forEach { line ->
+            val columns = parseCsvLine(line)
+            if (columns.size < 3) return@forEach
+            val id = columns[0].ifBlank { "import_${UUID.randomUUID()}" }
+            val label = columns[1].ifBlank { id }
+            val category = columns.getOrNull(2)?.let { runCatching { TagCategory.valueOf(it) }.getOrNull() }
+                ?: TagCategory.CUSTOM
+            tags += TagEntity(id = id, label = label, category = category)
+            val relatedColumn = columns.getOrNull(3).orEmpty()
+            relatedColumn.split('|')
+                .map { it.trim() }
+                .filter { it.isNotEmpty() }
+                .forEach { relatedId -> links += id to relatedId }
+        }
+
+        database.withTransaction {
+            tagDao.insertTags(tags)
+            links.forEach { (parent, child) ->
+                tagDao.insertLink(TagLinkEntity(parentTagId = parent, childTagId = child))
+                tagDao.insertLink(TagLinkEntity(parentTagId = child, childTagId = parent))
+            }
+        }
+        return tags.size
+    }
+
+    private fun String.escapeCsv(): String =
+        if (contains(',') || contains('"')) "\"${replace("\"", "\"\"")}\"" else this
+
+    private fun parseCsvLine(line: String): List<String> {
+        val result = mutableListOf<String>()
+        val current = StringBuilder()
+        var inQuotes = false
+        var i = 0
+        while (i < line.length) {
+            val char = line[i]
+            when {
+                char == '"' -> {
+                    if (inQuotes && i + 1 < line.length && line[i + 1] == '"') {
+                        current.append('"')
+                        i++
+                    } else {
+                        inQuotes = !inQuotes
+                    }
+                }
+                char == ',' && !inQuotes -> {
+                    result += current.toString()
+                    current.clear()
+                }
+                else -> current.append(char)
+            }
+            i++
+        }
+        result += current.toString()
+        return result
+    }
 }

@@ -15,7 +15,6 @@ import androidx.core.view.GravityCompat
 import androidx.core.view.isVisible
 import androidx.core.widget.doOnTextChanged
 import androidx.lifecycle.lifecycleScope
-import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.minandroidapp.data.QuickLogRepository
 import com.example.minandroidapp.data.db.LogDatabase
 import com.example.minandroidapp.databinding.ActivityMainBinding
@@ -24,7 +23,6 @@ import com.example.minandroidapp.model.EntryLocation
 import com.example.minandroidapp.model.LogEntry
 import com.example.minandroidapp.model.LogTag
 import com.example.minandroidapp.model.QuickLogEvent
-import com.example.minandroidapp.ui.EntryAdapter
 import com.example.minandroidapp.ui.QuickLogViewModel
 import com.example.minandroidapp.ui.entries.EntriesOverviewActivity
 import com.example.minandroidapp.ui.tag.TagManagerActivity
@@ -42,15 +40,6 @@ class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private lateinit var drawerToggle: ActionBarDrawerToggle
     private lateinit var locationProvider: LocationProvider
-    private val entryAdapter = EntryAdapter(
-        onEntryClicked = { entry ->
-            viewModel.beginEditing(entry.id)
-            binding.contentScroll.smoothScrollTo(0, 0)
-        },
-        onShareClicked = { entry ->
-            shareEntry(entry)
-        },
-    )
     private var suppressNoteUpdates = false
 
     private val viewModel: QuickLogViewModel by viewModels {
@@ -82,8 +71,8 @@ class MainActivity : AppCompatActivity() {
         locationProvider = LocationProvider(this)
 
         setupDrawer()
-        setupRecyclerView()
         setupInputs()
+        setupBottomNav()
         bindViewModel()
 
         maybeFetchLocationOnStart()
@@ -113,23 +102,12 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun setupRecyclerView() {
-        binding.entryList.apply {
-            layoutManager = LinearLayoutManager(this@MainActivity)
-            adapter = entryAdapter
-            setHasFixedSize(false)
-        }
-    }
-
     private fun setupInputs() {
         binding.clearTagsButton.setOnClickListener {
             viewModel.clearTags()
         }
         binding.newTagButton.setOnClickListener {
             showCreateTagDialog()
-        }
-        binding.manageTagsButton.setOnClickListener {
-            openTagManager()
         }
         binding.saveButton.setOnClickListener {
             viewModel.saveEntry()
@@ -141,6 +119,26 @@ class MainActivity : AppCompatActivity() {
             if (suppressNoteUpdates) return@doOnTextChanged
             viewModel.setNote(text?.toString().orEmpty())
         }
+    }
+
+    private fun setupBottomNav() {
+        binding.bottomNav.setOnItemSelectedListener { item ->
+            when (item.itemId) {
+                R.id.nav_record -> true
+                R.id.nav_entries -> {
+                    openEntriesOverview()
+                    binding.bottomNav.selectedItemId = R.id.nav_record
+                    false
+                }
+                R.id.nav_tags -> {
+                    openTagManager()
+                    binding.bottomNav.selectedItemId = R.id.nav_record
+                    false
+                }
+                else -> false
+            }
+        }
+        binding.bottomNav.selectedItemId = R.id.nav_record
     }
 
     private fun bindViewModel() {
@@ -187,8 +185,6 @@ class MainActivity : AppCompatActivity() {
                     getString(R.string.update_entry)
                 }
 
-                entryAdapter.submitList(state.entries)
-                binding.emptyEntriesText.isVisible = state.entries.isEmpty()
             }
         }
 

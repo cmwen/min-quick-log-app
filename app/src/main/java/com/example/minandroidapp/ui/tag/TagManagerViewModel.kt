@@ -21,6 +21,10 @@ class TagManagerViewModel(private val repository: QuickLogRepository) : ViewMode
         }
     }
 
+    suspend fun exportTagsCsv(): String = repository.exportTagsCsv()
+
+    suspend fun importTagsCsv(csv: String): Int = repository.importTagsCsv(csv)
+
     class Factory(private val repository: QuickLogRepository) : ViewModelProvider.Factory {
         @Suppress("UNCHECKED_CAST")
         override fun <T : ViewModel> create(modelClass: Class<T>): T {
