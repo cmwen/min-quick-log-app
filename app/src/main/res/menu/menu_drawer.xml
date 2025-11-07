@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_entries_overview"
+            android:title="@string/entries_overview" />
+        <item
+            android:id="@+id/nav_tag_manager"
+            android:title="@string/manage_tags" />
+        <item
+            android:id="@+id/nav_export_text"
+            android:title="@string/export_log" />
+        <item
+            android:id="@+id/nav_export_csv"
+            android:title="@string/export_csv" />
+    </group>
+    <item
+        android:id="@+id/nav_about"
+        android:title="@string/about_app" />
+</menu>

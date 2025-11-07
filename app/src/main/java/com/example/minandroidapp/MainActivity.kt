@@ -3,11 +3,15 @@ package com.example.minandroidapp
 import android.Manifest
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.os.Build
 import android.os.Bundle
+import android.view.MenuItem
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
+import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
+import androidx.core.view.GravityCompat
 import androidx.core.view.isVisible
 import androidx.core.widget.doOnTextChanged
 import androidx.lifecycle.lifecycleScope
@@ -36,6 +40,7 @@ import kotlinx.coroutines.launch
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
+    private lateinit var drawerToggle: ActionBarDrawerToggle
     private lateinit var locationProvider: LocationProvider
     private val entryAdapter = EntryAdapter(
         onEntryClicked = { entry ->
@@ -73,11 +78,10 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         setSupportActionBar(binding.toolbar)
-        supportActionBar?.setDisplayShowTitleEnabled(true)
 
         locationProvider = LocationProvider(this)
 
-        setupToolbar()
+        setupDrawer()
         setupRecyclerView()
         setupInputs()
         bindViewModel()
@@ -85,27 +89,27 @@ class MainActivity : AppCompatActivity() {
         maybeFetchLocationOnStart()
     }
 
-    private fun setupToolbar() {
-        binding.toolbar.setOnMenuItemClickListener { item ->
+    private fun setupDrawer() {
+        drawerToggle = ActionBarDrawerToggle(
+            this,
+            binding.drawerLayout,
+            binding.toolbar,
+            R.string.drawer_open,
+            R.string.drawer_close,
+        )
+        binding.drawerLayout.addDrawerListener(drawerToggle)
+        drawerToggle.syncState()
+
+        binding.navigationView.setNavigationItemSelectedListener { item ->
             when (item.itemId) {
-                R.id.action_export -> {
-                    exportLog()
-                    true
-                }
-                R.id.action_export_csv -> {
-                    exportCsv()
-                    true
-                }
-                R.id.action_manage_tags -> {
-                    openTagManager()
-                    true
-                }
-                R.id.action_entries_overview -> {
-                    openEntriesOverview()
-                    true
-                }
-                else -> false
+                R.id.nav_entries_overview -> openEntriesOverview()
+                R.id.nav_tag_manager -> openTagManager()
+                R.id.nav_export_text -> exportLog()
+                R.id.nav_export_csv -> exportCsv()
+                R.id.nav_about -> showAboutDialog()
             }
+            binding.drawerLayout.closeDrawer(GravityCompat.START)
+            true
         }
     }
 
@@ -123,6 +127,9 @@ class MainActivity : AppCompatActivity() {
         }
         binding.newTagButton.setOnClickListener {
             showCreateTagDialog()
+        }
+        binding.manageTagsButton.setOnClickListener {
+            openTagManager()
         }
         binding.saveButton.setOnClickListener {
             viewModel.saveEntry()
@@ -334,6 +341,41 @@ class MainActivity : AppCompatActivity() {
 
     private fun openEntriesOverview() {
         startActivity(Intent(this, EntriesOverviewActivity::class.java))
+    }
+
+    private fun showAboutDialog() {
+        val packageInfo = packageManager.getPackageInfo(packageName, 0)
+        val versionName = packageInfo.versionName ?: "1.0"
+        val versionCode = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+            packageInfo.longVersionCode
+        } else {
+            @Suppress("DEPRECATION")
+            packageInfo.versionCode.toLong()
+        }
+        MaterialAlertDialogBuilder(this)
+            .setTitle(R.string.about_app)
+            .setMessage(
+                getString(R.string.app_version, versionName, versionCode) +
+                    "\n\n" + getString(R.string.about_message),
+            )
+            .setPositiveButton(android.R.string.ok, null)
+            .show()
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return if (drawerToggle.onOptionsItemSelected(item)) {
+            true
+        } else {
+            super.onOptionsItemSelected(item)
+        }
+    }
+
+    override fun onBackPressed() {
+        if (binding.drawerLayout.isDrawerOpen(GravityCompat.START)) {
+            binding.drawerLayout.closeDrawer(GravityCompat.START)
+        } else {
+            super.onBackPressed()
+        }
     }
 
     private fun showCreateTagDialog() {
