@@ -2,14 +2,14 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
         android:id="@+id/nav_record"
-        android:icon="@drawable/ic_quick_log_logo"
+        android:icon="@drawable/ic_tab_record"
         android:title="@string/tab_record" />
     <item
         android:id="@+id/nav_entries"
-        android:icon="@drawable/ic_export"
+        android:icon="@drawable/ic_tab_entries"
         android:title="@string/entries_overview" />
     <item
         android:id="@+id/nav_tags"
-        android:icon="@drawable/ic_location"
+        android:icon="@drawable/ic_tab_tags"
         android:title="@string/manage_tags" />
 </menu>

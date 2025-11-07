@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/action_entries_overview"
+        android:icon="@drawable/ic_tab_entries"
+        android:title="@string/entries_overview"
+        app:showAsAction="ifRoom" />
+
+    <item
+        android:id="@+id/action_manage_tags"
+        android:icon="@drawable/ic_tab_tags"
+        android:title="@string/manage_tags"
+        app:showAsAction="ifRoom" />
+
+    <item
+        android:id="@+id/action_export_text"
+        android:icon="@drawable/ic_export"
+        android:title="@string/export_log"
+        app:showAsAction="ifRoom" />
+
+    <item
+        android:id="@+id/action_export_csv"
+        android:icon="@drawable/ic_export_csv"
+        android:title="@string/export_csv"
+        app:showAsAction="ifRoom" />
+
+    <item
+        android:id="@+id/action_about"
+        android:icon="@drawable/ic_info"
+        android:title="@string/about_app"
+        app:showAsAction="never" />
+
+</menu>

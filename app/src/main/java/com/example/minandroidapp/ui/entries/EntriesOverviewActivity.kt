@@ -1,15 +1,18 @@
 package com.example.minandroidapp.ui.entries
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.viewpager2.adapter.FragmentStateAdapter
+import com.example.minandroidapp.MainActivity
+import com.example.minandroidapp.R
 import com.example.minandroidapp.data.QuickLogRepository
 import com.example.minandroidapp.data.db.LogDatabase
 import com.example.minandroidapp.databinding.ActivityEntriesOverviewBinding
 import com.google.android.material.tabs.TabLayoutMediator
 
-class EntriesOverviewActivity : AppCompatActivity() {
+class EntriesOverviewActivity : AppCompatActivity(), EntryShareHandler {
 
     private lateinit var binding: ActivityEntriesOverviewBinding
 
@@ -38,6 +41,30 @@ class EntriesOverviewActivity : AppCompatActivity() {
                 else -> getString(com.example.minandroidapp.R.string.entries_tab_stats)
             }
         }.attach()
+
+        setupBottomNav()
+    }
+
+    private fun setupBottomNav() {
+        binding.bottomNav.selectedItemId = R.id.nav_entries
+        binding.bottomNav.setOnItemSelectedListener { item ->
+            when (item.itemId) {
+                R.id.nav_record -> {
+                    startActivity(Intent(this, MainActivity::class.java).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP))
+                    overridePendingTransition(0, 0)
+                    finish()
+                    true
+                }
+                R.id.nav_entries -> true
+                R.id.nav_tags -> {
+                    startActivity(Intent(this, com.example.minandroidapp.ui.tag.TagManagerActivity::class.java))
+                    overridePendingTransition(0, 0)
+                    finish()
+                    true
+                }
+                else -> false
+            }
+        }
     }
 
     private class EntriesPagerAdapter(
@@ -53,4 +80,17 @@ class EntriesOverviewActivity : AppCompatActivity() {
             else -> StatsFragment()
         }
     }
+
+    override fun onShareEntry(entry: com.example.minandroidapp.model.LogEntry) {
+        val text = viewModel.formatSharePreview(entry)
+        val shareIntent = Intent(Intent.ACTION_SEND).apply {
+            type = "text/plain"
+            putExtra(Intent.EXTRA_TEXT, text)
+        }
+        startActivity(Intent.createChooser(shareIntent, getString(com.example.minandroidapp.R.string.share_entry)))
+    }
+}
+
+interface EntryShareHandler {
+    fun onShareEntry(entry: com.example.minandroidapp.model.LogEntry)
 }

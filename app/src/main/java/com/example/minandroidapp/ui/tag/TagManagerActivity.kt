@@ -1,5 +1,6 @@
 package com.example.minandroidapp.ui.tag
 
+import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import androidx.activity.result.contract.ActivityResultContracts
@@ -7,10 +8,13 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.minandroidapp.MainActivity
+import com.example.minandroidapp.R
 import com.example.minandroidapp.data.QuickLogRepository
 import com.example.minandroidapp.data.db.LogDatabase
 import com.example.minandroidapp.databinding.ActivityTagManagerBinding
 import com.example.minandroidapp.model.TagRelations
+import com.example.minandroidapp.ui.entries.EntriesOverviewActivity
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.launch
@@ -47,14 +51,14 @@ class TagManagerActivity : AppCompatActivity() {
 
         setSupportActionBar(binding.tagToolbar)
         binding.tagToolbar.setNavigationOnClickListener { finish() }
-        binding.tagToolbar.inflateMenu(com.example.minandroidapp.R.menu.menu_tag_manager)
+        binding.tagToolbar.inflateMenu(R.menu.menu_tag_manager)
         binding.tagToolbar.setOnMenuItemClickListener { item ->
             when (item.itemId) {
-                com.example.minandroidapp.R.id.action_export_tags -> {
+                R.id.action_export_tags -> {
                     exportTagsLauncher.launch("quick-log-tags.csv")
                     true
                 }
-                com.example.minandroidapp.R.id.action_import_tags -> {
+                R.id.action_import_tags -> {
                     importTagsLauncher.launch(arrayOf("text/*", "application/*"))
                     true
                 }
@@ -75,6 +79,7 @@ class TagManagerActivity : AppCompatActivity() {
                 adapter.submitList(relations)
             }
         }
+        setupBottomNav()
     }
 
     private fun showEditDialog(relations: TagRelations) {
@@ -109,9 +114,9 @@ class TagManagerActivity : AppCompatActivity() {
                 }
             }
         }.onSuccess {
-            Snackbar.make(binding.root, com.example.minandroidapp.R.string.export_tags_success, Snackbar.LENGTH_LONG).show()
+            Snackbar.make(binding.root, R.string.export_tags_success, Snackbar.LENGTH_LONG).show()
         }.onFailure {
-            Snackbar.make(binding.root, it.localizedMessage ?: getString(com.example.minandroidapp.R.string.import_tags_failure), Snackbar.LENGTH_LONG).show()
+            Snackbar.make(binding.root, it.localizedMessage ?: getString(R.string.import_tags_failure), Snackbar.LENGTH_LONG).show()
         }
     }
 
@@ -120,18 +125,40 @@ class TagManagerActivity : AppCompatActivity() {
             contentResolver.openInputStream(uri)?.bufferedReader()?.use { it.readText() }
         }.getOrNull()
         if (content.isNullOrEmpty()) {
-            Snackbar.make(binding.root, com.example.minandroidapp.R.string.import_tags_failure, Snackbar.LENGTH_LONG).show()
+            Snackbar.make(binding.root, R.string.import_tags_failure, Snackbar.LENGTH_LONG).show()
             return
         }
         runCatching {
             val count = viewModel.importTagsCsv(content)
             Snackbar.make(
                 binding.root,
-                getString(com.example.minandroidapp.R.string.import_tags_success, count),
+                getString(R.string.import_tags_success, count),
                 Snackbar.LENGTH_LONG,
             ).show()
         }.onFailure {
-            Snackbar.make(binding.root, com.example.minandroidapp.R.string.import_tags_failure, Snackbar.LENGTH_LONG).show()
+            Snackbar.make(binding.root, R.string.import_tags_failure, Snackbar.LENGTH_LONG).show()
+        }
+    }
+
+    private fun setupBottomNav() {
+        binding.bottomNav.selectedItemId = R.id.nav_tags
+        binding.bottomNav.setOnItemSelectedListener { item ->
+            when (item.itemId) {
+                R.id.nav_record -> {
+                    startActivity(Intent(this, MainActivity::class.java).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP))
+                    overridePendingTransition(0, 0)
+                    finish()
+                    true
+                }
+                R.id.nav_entries -> {
+                    startActivity(Intent(this, EntriesOverviewActivity::class.java))
+                    overridePendingTransition(0, 0)
+                    finish()
+                    true
+                }
+                R.id.nav_tags -> true
+                else -> false
+            }
         }
     }
 }

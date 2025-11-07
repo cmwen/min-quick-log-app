@@ -5,13 +5,12 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
+import android.view.Menu
 import android.view.MenuItem
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
-import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
-import androidx.core.view.GravityCompat
 import androidx.core.view.isVisible
 import androidx.core.widget.doOnTextChanged
 import androidx.lifecycle.lifecycleScope
@@ -38,7 +37,6 @@ import kotlinx.coroutines.launch
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
-    private lateinit var drawerToggle: ActionBarDrawerToggle
     private lateinit var locationProvider: LocationProvider
     private var suppressNoteUpdates = false
 
@@ -70,36 +68,11 @@ class MainActivity : AppCompatActivity() {
 
         locationProvider = LocationProvider(this)
 
-        setupDrawer()
         setupInputs()
         setupBottomNav()
         bindViewModel()
 
         maybeFetchLocationOnStart()
-    }
-
-    private fun setupDrawer() {
-        drawerToggle = ActionBarDrawerToggle(
-            this,
-            binding.drawerLayout,
-            binding.toolbar,
-            R.string.drawer_open,
-            R.string.drawer_close,
-        )
-        binding.drawerLayout.addDrawerListener(drawerToggle)
-        drawerToggle.syncState()
-
-        binding.navigationView.setNavigationItemSelectedListener { item ->
-            when (item.itemId) {
-                R.id.nav_entries_overview -> openEntriesOverview()
-                R.id.nav_tag_manager -> openTagManager()
-                R.id.nav_export_text -> exportLog()
-                R.id.nav_export_csv -> exportCsv()
-                R.id.nav_about -> showAboutDialog()
-            }
-            binding.drawerLayout.closeDrawer(GravityCompat.START)
-            true
-        }
     }
 
     private fun setupInputs() {
@@ -139,6 +112,32 @@ class MainActivity : AppCompatActivity() {
             }
         }
         binding.bottomNav.selectedItemId = R.id.nav_record
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        menuInflater.inflate(R.menu.menu_toolbar_actions, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            R.id.action_entries_overview -> {
+                openEntriesOverview(); true
+            }
+            R.id.action_manage_tags -> {
+                openTagManager(); true
+            }
+            R.id.action_export_text -> {
+                exportLog(); true
+            }
+            R.id.action_export_csv -> {
+                exportCsv(); true
+            }
+            R.id.action_about -> {
+                showAboutDialog(); true
+            }
+            else -> super.onOptionsItemSelected(item)
+        }
     }
 
     private fun bindViewModel() {
@@ -356,22 +355,6 @@ class MainActivity : AppCompatActivity() {
             )
             .setPositiveButton(android.R.string.ok, null)
             .show()
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return if (drawerToggle.onOptionsItemSelected(item)) {
-            true
-        } else {
-            super.onOptionsItemSelected(item)
-        }
-    }
-
-    override fun onBackPressed() {
-        if (binding.drawerLayout.isDrawerOpen(GravityCompat.START)) {
-            binding.drawerLayout.closeDrawer(GravityCompat.START)
-        } else {
-            super.onBackPressed()
-        }
     }
 
     private fun showCreateTagDialog() {
