@@ -13,9 +13,11 @@ class EntriesOverviewActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityEntriesOverviewBinding
 
-    private val viewModel: EntriesOverviewViewModel by viewModels {
+    val viewModelFactory: EntriesOverviewViewModel.Factory by lazy {
         EntriesOverviewViewModel.Factory(QuickLogRepository(LogDatabase.getInstance(applicationContext)))
     }
+
+    private val viewModel: EntriesOverviewViewModel by viewModels { viewModelFactory }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

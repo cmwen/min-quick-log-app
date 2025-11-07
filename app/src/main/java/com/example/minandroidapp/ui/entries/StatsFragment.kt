@@ -5,8 +5,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.ViewModelProvider
 import com.example.minandroidapp.databinding.FragmentEntriesStatsBinding
 import kotlinx.coroutines.launch
 
@@ -15,8 +15,8 @@ class StatsFragment : Fragment() {
     private var _binding: FragmentEntriesStatsBinding? = null
     private val binding get() = _binding!!
 
-    private val viewModel: EntriesOverviewViewModel by lazy {
-        ViewModelProvider(requireActivity())[EntriesOverviewViewModel::class.java]
+    private val viewModel: EntriesOverviewViewModel by activityViewModels {
+        (requireActivity() as EntriesOverviewActivity).viewModelFactory
     }
 
     override fun onCreateView(

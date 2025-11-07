@@ -5,10 +5,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.minandroidapp.databinding.FragmentEntriesListBinding
+import com.example.minandroidapp.ui.entries.EntriesOverviewActivity
 import kotlinx.coroutines.launch
 
 class SimpleEntriesFragment : Fragment() {
@@ -16,8 +17,8 @@ class SimpleEntriesFragment : Fragment() {
     private var _binding: FragmentEntriesListBinding? = null
     private val binding get() = _binding!!
 
-    private val viewModel: EntriesOverviewViewModel by lazy {
-        ViewModelProvider(requireActivity())[EntriesOverviewViewModel::class.java]
+    private val viewModel: EntriesOverviewViewModel by activityViewModels {
+        (requireActivity() as EntriesOverviewActivity).viewModelFactory
     }
 
     private lateinit var adapter: EntriesListAdapter

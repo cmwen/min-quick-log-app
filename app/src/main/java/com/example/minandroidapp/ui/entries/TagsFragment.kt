@@ -6,8 +6,8 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.minandroidapp.databinding.FragmentEntriesTagsBinding
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -18,8 +18,8 @@ class TagsFragment : Fragment() {
     private var _binding: FragmentEntriesTagsBinding? = null
     private val binding get() = _binding!!
 
-    private val viewModel: EntriesOverviewViewModel by lazy {
-        ViewModelProvider(requireActivity())[EntriesOverviewViewModel::class.java]
+    private val viewModel: EntriesOverviewViewModel by activityViewModels {
+        (requireActivity() as EntriesOverviewActivity).viewModelFactory
     }
 
     private lateinit var adapter: TagGroupAdapter

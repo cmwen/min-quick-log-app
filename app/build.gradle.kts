@@ -66,6 +66,7 @@ dependencies {
     kapt(libs.room.compiler)
     implementation(libs.play.services.location)
     coreLibraryDesugaring(libs.desugar.jdk)
+    implementation(libs.fragment.ktx)
 
     testImplementation(libs.junit4)
     androidTestImplementation(libs.androidx.junit)
