@@ -31,12 +31,14 @@
                 style="@style/Widget.Material3.Button.Icon"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@null"
                 android:contentDescription="@string/share_entry"
+                android:minWidth="0dp"
+                android:minHeight="0dp"
+                android:padding="4dp"
+                app:backgroundTint="?attr/colorSurfaceVariant"
                 app:icon="@drawable/ic_share"
-                app:iconTint="?attr/colorOnSurface"
                 app:iconPadding="0dp"
-                app:backgroundTint="?attr/colorSurfaceVariant" />
+                app:iconTint="?attr/colorOnSurface" />
         </LinearLayout>
 
         <TextView

@@ -45,6 +45,9 @@
     <string name="entries_stats_unique_tags">Etiquetas únicas: %1$d</string>
     <string name="entries_stats_top_tag">Etiqueta principal: %1$s (%2$d)</string>
     <string name="entries_stats_avg_daily">Promedio por día: %1$.1f</string>
+    <string name="entries_stats_tab_date">Por fecha</string>
+    <string name="entries_stats_tab_location">Por lugar</string>
+    <string name="entries_stats_tab_tags">Por etiquetas</string>
     <string name="drawer_open">Abrir navegación</string>
     <string name="drawer_close">Cerrar navegación</string>
     <string name="tab_record">Registrar</string>
@@ -58,4 +61,5 @@
     <string name="theme_system">Seguir el sistema</string>
     <string name="theme_light">Claro</string>
     <string name="theme_dark">Oscuro</string>
+    <string name="find_tag_hint">Buscar etiqueta</string>
 </resources>

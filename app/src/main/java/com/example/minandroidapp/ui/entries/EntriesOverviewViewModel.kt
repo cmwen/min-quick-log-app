@@ -99,6 +99,25 @@ class EntriesOverviewViewModel(private val repository: QuickLogRepository) : Vie
         return "$timestamp • $tags"
     }
 
+    val dateCounts: StateFlow<List<StatCount>> = entriesFlow
+        .map { entries -> buildCounts(entries) { dateFormatter.format(it.createdAt) } }
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), emptyList())
+
+    val locationCounts: StateFlow<List<StatCount>> = entriesFlow
+        .map { entries -> buildCounts(entries) { it.location.label ?: "Unknown" } }
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), emptyList())
+
+    val tagCounts: StateFlow<List<StatCount>> = entriesFlow
+        .map { entries ->
+            entries
+                .flatMap { entry -> entry.tags.map { tag -> tag.label } }
+                .groupingBy { it }
+                .eachCount()
+                .map { StatCount(it.key, it.value) }
+                .sortedByDescending { it.count }
+        }
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), emptyList())
+
     fun buildSharePayload(entry: LogEntry): EntrySharePayload {
         val timestamp = shareFormatter.format(entry.createdAt)
         val tagsBlock = entry.tags.joinToString(separator = ", ") { it.label }
@@ -126,6 +145,14 @@ class EntriesOverviewViewModel(private val repository: QuickLogRepository) : Vie
             }
         }
         return items
+    }
+
+    private fun buildCounts(entries: List<LogEntry>, selector: (LogEntry) -> String): List<StatCount> {
+        return entries
+            .groupingBy(selector)
+            .eachCount()
+            .map { StatCount(it.key, it.value) }
+            .sortedByDescending { it.count }
     }
 
     class Factory(private val repository: QuickLogRepository) : ViewModelProvider.Factory {

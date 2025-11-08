@@ -35,6 +35,12 @@ class QuickLogRepository(private val database: LogDatabase) {
         }
     }
 
+    fun observeAllTags(): Flow<List<LogTag>> {
+        return tagDao.observeAllTags().map { entities ->
+            entities.map { it.toModel() }
+        }
+    }
+
     suspend fun getSuggestions(selectedTagIds: Set<String>): List<LogTag> {
         if (selectedTagIds.isEmpty()) {
             return emptyList()

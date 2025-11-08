@@ -42,6 +42,9 @@ class QuickLogViewModel(private val repository: QuickLogRepository) : ViewModel(
     private val entriesFlow = repository.observeEntries()
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), emptyList())
 
+    private val allTagsFlow = repository.observeAllTags()
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), emptyList())
+
     private val draftFlow = MutableStateFlow(EntryDraft())
     private val clockFlow = MutableStateFlow(Instant.now())
     private val isSavingFlow = MutableStateFlow(false)
@@ -99,6 +102,8 @@ class QuickLogViewModel(private val repository: QuickLogRepository) : ViewModel(
     }.stateIn(viewModelScope, SharingStarted.Eagerly, QuickLogUiState())
 
     val events = eventsFlow.asSharedFlow()
+
+    val allTags: StateFlow<List<LogTag>> = allTagsFlow
 
     init {
         startClockTicker()
@@ -250,6 +255,13 @@ class QuickLogViewModel(private val repository: QuickLogRepository) : ViewModel(
                 eventsFlow.emit(QuickLogEvent.Error(error.message ?: "Unable to create tag"))
             }
         }
+    }
+
+    fun selectTagByLabel(label: String) {
+        val tag = allTagsFlow.value.firstOrNull { it.label.equals(label, ignoreCase = true) }
+            ?: return
+        if (draftFlow.value.selectedTags.any { it.id == tag.id }) return
+        toggleTag(tag)
     }
 
     private fun startClockTicker() {

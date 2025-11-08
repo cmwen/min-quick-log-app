@@ -7,6 +7,7 @@ import android.os.Build
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import android.widget.ArrayAdapter
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -73,6 +74,7 @@ class MainActivity : AppCompatActivity() {
 
         setupInputs()
         setupBottomNav()
+        setupTagSearch()
         bindViewModel()
 
         maybeFetchLocationOnStart()
@@ -116,6 +118,22 @@ class MainActivity : AppCompatActivity() {
             }
         }
         binding.bottomNav.selectedItemId = R.id.nav_record
+    }
+
+    private fun setupTagSearch() {
+        lifecycleScope.launch {
+            viewModel.allTags.collect { tags ->
+                val labels = tags.map { it.label }.sortedBy { it.lowercase(Locale.getDefault()) }
+                val adapter = ArrayAdapter(this@MainActivity, android.R.layout.simple_dropdown_item_1line, labels)
+                binding.tagSearchInput.setAdapter(adapter)
+            }
+        }
+        binding.tagSearchInput.setOnItemClickListener { parent, _, position, _ ->
+            val label = parent.getItemAtPosition(position) as? String ?: return@setOnItemClickListener
+            viewModel.selectTagByLabel(label)
+            binding.tagSearchInput.setText("")
+            binding.tagSearchInput.clearFocus()
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
