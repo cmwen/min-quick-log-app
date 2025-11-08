@@ -5,13 +5,22 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.example.minandroidapp.R
 import com.example.minandroidapp.databinding.ItemTagRelationBinding
 import com.example.minandroidapp.model.TagRelations
 import com.google.android.material.chip.Chip
 
 class TagRelationsAdapter(
     private val onEdit: (TagRelations) -> Unit,
+    private val onToggleSelection: (TagRelations) -> Unit,
 ) : ListAdapter<TagRelations, TagRelationsAdapter.TagRelationViewHolder>(DIFF) {
+
+    private var selectedIds: Set<String> = emptySet()
+
+    fun setSelection(ids: Set<String>) {
+        selectedIds = ids.toSet()
+        notifyDataSetChanged()
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TagRelationViewHolder {
         val binding = ItemTagRelationBinding.inflate(LayoutInflater.from(parent.context), parent, false)
@@ -22,7 +31,9 @@ class TagRelationsAdapter(
         holder.bind(getItem(position))
     }
 
-    class TagRelationViewHolder(
+    private fun inSelectionMode(): Boolean = selectedIds.isNotEmpty()
+
+    inner class TagRelationViewHolder(
         private val binding: ItemTagRelationBinding,
         private val onEdit: (TagRelations) -> Unit,
     ) : RecyclerView.ViewHolder(binding.root) {
@@ -39,6 +50,23 @@ class TagRelationsAdapter(
             }
             binding.editConnectionsButton.setOnClickListener {
                 onEdit(relations)
+            }
+            val strokeWidth = binding.root.resources.getDimensionPixelSize(
+                if (selectedIds.contains(relations.tag.id)) {
+                    R.dimen.tag_card_stroke_selected
+                } else {
+                    R.dimen.tag_card_stroke_default
+                },
+            )
+            binding.root.strokeWidth = strokeWidth
+            binding.root.setOnLongClickListener {
+                onToggleSelection(relations)
+                true
+            }
+            binding.root.setOnClickListener {
+                if (inSelectionMode()) {
+                    onToggleSelection(relations)
+                }
             }
         }
     }

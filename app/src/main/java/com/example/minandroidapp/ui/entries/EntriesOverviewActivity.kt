@@ -53,14 +53,12 @@ class EntriesOverviewActivity : AppCompatActivity(), EntryActionHandler {
             when (item.itemId) {
                 R.id.nav_record -> {
                     startActivity(Intent(this, MainActivity::class.java).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP))
-                    overridePendingTransition(0, 0)
                     finish()
                     true
                 }
                 R.id.nav_entries -> true
                 R.id.nav_tags -> {
                     startActivity(Intent(this, com.example.minandroidapp.ui.tag.TagManagerActivity::class.java))
-                    overridePendingTransition(0, 0)
                     finish()
                     true
                 }

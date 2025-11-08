@@ -4,13 +4,14 @@ Quick Log is a lightweight Android 14+ companion for capturing what just happene
 
 ## Key capabilities
 
-- Tag-first capture: recent and context-aware suggestions keep the most relevant people, actions, and moods one tap away.
+- Tag-first capture: recent, popular, and context-aware suggestions keep the most relevant people, actions, and moods one tap away.
 - Smart context: automatic timestamping, quick location lookup, and optional notes enrich each entry without slowing you down.
 - Fast recall: edit any entry from the history list, re-tag it, or update the note after the fact.
 - Simple exports: produce Logseq-compatible text with a single tap so your moments travel to whatever knowledge base you prefer; rich-text share targets keep formatting intact.
 - Dark theme ready: Material 3 styling honours system light/dark settings out of the box.
-- Personal vocab: create custom tags on the fly whenever you need a new label and relate them on the Tag Map screen.
+- Personal vocab: create custom tags on the fly, manage them from the Tag Map screen, import/export CSVs, or bulk-delete labels when vocabularies change.
 - Sense-making views: switch to the Entries Overview to slice logs by date, location, or tag, review stats, run tag searches, and share CSV snapshots.
+- Localised UI: ship-ready English, Spanish, and French strings keep workflows familiar for multilingual teams.
 
 ## Getting started
 

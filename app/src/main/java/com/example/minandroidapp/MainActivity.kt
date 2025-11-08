@@ -191,6 +191,11 @@ class MainActivity : AppCompatActivity() {
                 renderSelectableChips(binding.recentTagsGroup, state.recentTags, state.draft.selectedTags)
                 binding.recentTagsLabel.isVisible = state.recentTags.isNotEmpty()
 
+                renderSelectableChips(binding.tagSuggestionsGroup, state.connectedTags, state.draft.selectedTags)
+                val showConnected = state.connectedTags.isNotEmpty()
+                binding.tagSuggestionsLabel.isVisible = showConnected
+                binding.tagSuggestionsGroup.isVisible = showConnected
+
                 renderSelectableChips(binding.suggestedTagsGroup, state.suggestedTags, state.draft.selectedTags)
                 binding.suggestedTagsLabel.isVisible = state.suggestedTags.isNotEmpty()
                 binding.suggestedTagsGroup.isVisible = state.suggestedTags.isNotEmpty()

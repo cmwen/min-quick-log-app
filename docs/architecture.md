@@ -20,11 +20,11 @@ Additional modules (e.g., `core`, `feature-*`, `data`) can be added as needed. U
 ### Feature-specific additions
 
 - **Room** provides persistent storage for tags, entries, and their relationships. The schema seeds a small tag graph so the app can surface sensible suggestions on first launch.
-- **ViewModel + Kotlin Flows** drive UI state (`QuickLogViewModel` combines recent tags, suggestions, entry history, and entry drafts into a single observable stream).
+- **ViewModel + Kotlin Flows** drive UI state (`QuickLogViewModel` combines recent tags, highly-connected “popular” tags derived from the tag graph, contextual suggestions, entry history, and entry drafts into a single observable stream).
 - **Google Play Services Location** exposes the user's current position, which is reverse geocoded (when available) to enrich logs with a place label.
 - **Material 3 components** (chips, buttons, cards, toolbar) deliver a responsive light/dark UI without custom styling, and the entries overview uses `TabLayout` + `ViewPager2` for quick pivots.
 - **Branding assets** live in `design/` (SVG source) and `app/src/main/res/drawable/` (VectorDrawable) so the same iconography can be reused for launchers or marketing material.
-- **Data exploration**: the `EntriesOverviewActivity` provides grouped RecyclerView sections for dates, locations, and tags plus a stats panel, while `TagManagerActivity` renders the user-defined tag graph and lets users connect tags bidirectionally.
+- **Data exploration**: the `EntriesOverviewActivity` provides grouped RecyclerView sections for dates, locations, and tags plus a stats panel, while `TagManagerActivity` now renders the user-defined tag graph, lets users connect tags bidirectionally, import/export CSV vocabularies, and bulk-manage tags with multi-select delete + on-device creation.
 
 ## Build Configuration
 

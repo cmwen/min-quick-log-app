@@ -24,6 +24,9 @@ interface TagDao {
     @Query("SELECT * FROM tags ORDER BY label ASC")
     fun observeAllTags(): Flow<List<TagEntity>>
 
+    @Query("SELECT * FROM tags ORDER BY label ASC")
+    suspend fun getAllTags(): List<TagEntity>
+
     @Query(
         value = """
             SELECT *
@@ -32,15 +35,6 @@ interface TagDao {
         """,
     )
     suspend fun getTags(ids: List<String>): List<TagEntity>
-
-    @Query(
-        value = """
-            SELECT *
-            FROM tags
-            ORDER BY label ASC
-        """,
-    )
-    suspend fun getAllTags(): List<TagEntity>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertTags(tags: List<TagEntity>)
@@ -59,6 +53,14 @@ interface TagDao {
 
     @Query("DELETE FROM tag_links WHERE parentTagId = :parentId AND childTagId = :childId")
     suspend fun deleteLink(parentId: String, childId: String)
+
+    @Query("DELETE FROM tags WHERE id IN (:ids)")
+    suspend fun deleteTags(ids: List<String>)
+
+    @Query(
+        "DELETE FROM tag_links WHERE parentTagId IN (:ids) OR childTagId IN (:ids)"
+    )
+    suspend fun deleteLinksFor(ids: List<String>)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertLinks(links: List<TagLinkEntity>)

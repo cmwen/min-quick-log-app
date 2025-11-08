@@ -25,6 +25,22 @@ class TagManagerViewModel(private val repository: QuickLogRepository) : ViewMode
 
     suspend fun importTagsCsv(csv: String): Int = repository.importTagsCsv(csv)
 
+    fun createCustomTag(label: String, onResult: (Boolean) -> Unit) {
+        viewModelScope.launch {
+            runCatching { repository.createCustomTag(label) }
+                .onSuccess { onResult(true) }
+                .onFailure { onResult(false) }
+        }
+    }
+
+    fun deleteTags(tagIds: List<String>, onComplete: (Boolean) -> Unit) {
+        viewModelScope.launch {
+            runCatching { repository.deleteTags(tagIds) }
+                .onSuccess { onComplete(true) }
+                .onFailure { onComplete(false) }
+        }
+    }
+
     class Factory(private val repository: QuickLogRepository) : ViewModelProvider.Factory {
         @Suppress("UNCHECKED_CAST")
         override fun <T : ViewModel> create(modelClass: Class<T>): T {

@@ -11,6 +11,7 @@ import com.example.minandroidapp.model.LogEntry
 import com.example.minandroidapp.model.LogTag
 import com.example.minandroidapp.model.QuickLogEvent
 import com.example.minandroidapp.model.QuickLogUiState
+import com.example.minandroidapp.model.TagRelations
 import java.time.Instant
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
@@ -29,6 +30,7 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -46,6 +48,7 @@ class QuickLogViewModel(private val repository: QuickLogRepository) : ViewModel(
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), emptyList())
 
     private val draftFlow = MutableStateFlow(EntryDraft())
+    private val selectedTagIdsFlow = draftFlow.mapSelectedTagIds()
     private val clockFlow = MutableStateFlow(Instant.now())
     private val isSavingFlow = MutableStateFlow(false)
     private val errorMessageFlow = MutableStateFlow<String?>(null)
@@ -58,8 +61,25 @@ class QuickLogViewModel(private val repository: QuickLogRepository) : ViewModel(
 
     private var tickerJob: Job? = null
 
-    private val suggestionsFlow: StateFlow<List<LogTag>> = draftFlow
-        .mapSelectedTagIds()
+    private val tagRelationsFlow = repository.observeTagRelations()
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), emptyList())
+
+    private val topConnectedTagsFlow: StateFlow<List<LogTag>> = combine(
+        tagRelationsFlow,
+        selectedTagIdsFlow,
+    ) { relations, selectedIds ->
+        relations
+            .filter { it.related.isNotEmpty() }
+            .sortedWith(
+                compareByDescending<TagRelations> { it.related.size }
+                    .thenBy { it.tag.label.lowercase(Locale.getDefault()) },
+            )
+            .map { it.tag }
+            .filter { it.id !in selectedIds }
+            .take(POPULAR_TAG_LIMIT)
+    }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), emptyList())
+
+    private val suggestionsFlow: StateFlow<List<LogTag>> = selectedTagIdsFlow
         .flatMapLatest { selectedIds ->
             flow {
                 val candidates = repository.getSuggestions(selectedIds)
@@ -74,9 +94,15 @@ class QuickLogViewModel(private val repository: QuickLogRepository) : ViewModel(
     private val draftWithContextFlow = combine(
         draftFlow,
         recentTagsFlow,
+        topConnectedTagsFlow,
         suggestionsFlow,
-    ) { draft, recentTags, suggestions ->
-        Triple(draft, recentTags, suggestions)
+    ) { draft, recentTags, connectedTags, suggestions ->
+        DraftContext(
+            draft = draft,
+            recentTags = recentTags,
+            connectedTags = connectedTags,
+            suggestions = suggestions,
+        )
     }
 
     private val exportFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm", Locale.getDefault())
@@ -89,11 +115,11 @@ class QuickLogViewModel(private val repository: QuickLogRepository) : ViewModel(
         isSavingFlow,
         errorMessageFlow,
     ) { draftContext, entries, clock, isSaving, error ->
-        val (draft, recentTags, suggestions) = draftContext
         QuickLogUiState(
-            draft = draft,
-            recentTags = recentTags,
-            suggestedTags = suggestions,
+            draft = draftContext.draft,
+            recentTags = draftContext.recentTags,
+            connectedTags = draftContext.connectedTags,
+            suggestedTags = draftContext.suggestions,
             entries = entries,
             clockInstant = clock,
             isSaving = isSaving,
@@ -289,6 +315,10 @@ class QuickLogViewModel(private val repository: QuickLogRepository) : ViewModel(
         }
     }
 
+    companion object {
+        private const val POPULAR_TAG_LIMIT = 8
+    }
+
     private fun formatEntryText(entry: LogEntry): String {
         val timestamp = exportFormatter.format(entry.createdAt)
         val tagsBlock = entry.tags.joinToString(separator = ", ") { it.label }
@@ -314,6 +344,13 @@ class QuickLogViewModel(private val repository: QuickLogRepository) : ViewModel(
             .replace("'", "&#39;")
     }
 }
+
+private data class DraftContext(
+    val draft: EntryDraft,
+    val recentTags: List<LogTag>,
+    val connectedTags: List<LogTag>,
+    val suggestions: List<LogTag>,
+)
 
 @OptIn(ExperimentalCoroutinesApi::class)
 private fun MutableStateFlow<EntryDraft>.mapSelectedTagIds(): Flow<Set<String>> = this
