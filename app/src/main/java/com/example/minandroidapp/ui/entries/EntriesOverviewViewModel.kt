@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.example.minandroidapp.data.QuickLogRepository
+import com.example.minandroidapp.model.EntrySharePayload
 import com.example.minandroidapp.model.LogEntry
 import java.time.Instant
 import java.time.ZoneId
@@ -23,6 +24,9 @@ class EntriesOverviewViewModel(private val repository: QuickLogRepository) : Vie
     private val tagQuery = MutableStateFlow("")
 
     private val dateFormatter = DateTimeFormatter.ofPattern("EEE, MMM d")
+        .withZone(ZoneId.systemDefault())
+
+    private val shareFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")
         .withZone(ZoneId.systemDefault())
 
     val entriesByDate: StateFlow<List<EntryListItem>> = entriesFlow
@@ -93,6 +97,24 @@ class EntriesOverviewViewModel(private val repository: QuickLogRepository) : Vie
         val timestamp = dateFormatter.format(entry.createdAt)
         val tags = entry.tags.joinToString(separator = ", ") { it.label }
         return "$timestamp • $tags"
+    }
+
+    fun buildSharePayload(entry: LogEntry): EntrySharePayload {
+        val timestamp = shareFormatter.format(entry.createdAt)
+        val tagsBlock = entry.tags.joinToString(separator = ", ") { it.label }
+        val location = entry.location.label?.let { " • location: $it" } ?: ""
+        val note = entry.note?.takeIf { it.isNotBlank() }?.let { " • note: $it" } ?: ""
+        val plain = "- $timestamp • tags: $tagsBlock$location$note"
+        val html = buildString {
+            append("<p><strong>").append(timestamp).append("</strong><br/>")
+            append("<strong>Tags:</strong> ").append(tagsBlock)
+            entry.location.label?.let { append("<br/><strong>Location:</strong> ").append(it) }
+            entry.note?.takeIf { it.isNotBlank() }?.let {
+                append("<br/><strong>Note:</strong> ").append(it.replace("<", "&lt;").replace(">", "&gt;"))
+            }
+            append("</p>")
+        }
+        return EntrySharePayload(plain = plain, html = html)
     }
 
     private fun buildSections(groups: Map<String, List<LogEntry>>): List<EntryListItem> {

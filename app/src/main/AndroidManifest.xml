@@ -27,6 +27,10 @@
         <activity
             android:name="com.example.minandroidapp.ui.entries.EntriesOverviewActivity"
             android:exported="false" />
+
+        <activity
+            android:name="com.example.minandroidapp.settings.SettingsActivity"
+            android:exported="false" />
     </application>
 
 </manifest>

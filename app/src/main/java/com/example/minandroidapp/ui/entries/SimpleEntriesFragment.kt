@@ -33,10 +33,10 @@ class SimpleEntriesFragment : Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        val shareHost = activity as? EntryShareHandler
+        val actionHost = activity as? EntryActionHandler
         adapter = EntriesListAdapter(
-            onEntryClicked = {},
-            onShareClicked = { entry -> shareHost?.onShareEntry(entry) },
+            onEntryClicked = { entry -> actionHost?.onEditEntry(entry) },
+            onShareClicked = { entry -> actionHost?.onShareEntry(entry) },
         )
         binding.entriesList.layoutManager = LinearLayoutManager(requireContext())
         binding.entriesList.adapter = adapter

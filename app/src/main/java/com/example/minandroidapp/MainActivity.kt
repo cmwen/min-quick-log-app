@@ -22,6 +22,8 @@ import com.example.minandroidapp.model.EntryLocation
 import com.example.minandroidapp.model.LogEntry
 import com.example.minandroidapp.model.LogTag
 import com.example.minandroidapp.model.QuickLogEvent
+import com.example.minandroidapp.settings.SettingsActivity
+import com.example.minandroidapp.settings.ThemeManager
 import com.example.minandroidapp.ui.QuickLogViewModel
 import com.example.minandroidapp.ui.entries.EntriesOverviewActivity
 import com.example.minandroidapp.ui.tag.TagManagerActivity
@@ -60,6 +62,7 @@ class MainActivity : AppCompatActivity() {
         .withZone(ZoneId.systemDefault())
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        ThemeManager.applySavedTheme(this)
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
@@ -73,6 +76,7 @@ class MainActivity : AppCompatActivity() {
         bindViewModel()
 
         maybeFetchLocationOnStart()
+        handleEditIntent(intent)
     }
 
     private fun setupInputs() {
@@ -136,8 +140,17 @@ class MainActivity : AppCompatActivity() {
             R.id.action_about -> {
                 showAboutDialog(); true
             }
+            R.id.action_settings -> {
+                startActivity(Intent(this, SettingsActivity::class.java))
+                true
+            }
             else -> super.onOptionsItemSelected(item)
         }
+    }
+
+    override fun onNewIntent(intent: Intent) {
+        super.onNewIntent(intent)
+        handleEditIntent(intent)
     }
 
     private fun bindViewModel() {
@@ -357,6 +370,14 @@ class MainActivity : AppCompatActivity() {
             .show()
     }
 
+    private fun handleEditIntent(intent: Intent) {
+        val entryId = intent.getLongExtra(EXTRA_EDIT_ENTRY_ID, -1L)
+        if (entryId != -1L) {
+            viewModel.beginEditing(entryId)
+            binding.bottomNav.selectedItemId = R.id.nav_record
+        }
+    }
+
     private fun showCreateTagDialog() {
         val dialogView = layoutInflater.inflate(R.layout.dialog_create_tag, null)
         val input = dialogView.findViewById<TextInputEditText>(R.id.newTagInput)
@@ -376,5 +397,9 @@ class MainActivity : AppCompatActivity() {
 
     private fun showMessage(message: String) {
         Snackbar.make(binding.root, message, Snackbar.LENGTH_LONG).show()
+    }
+
+    companion object {
+        const val EXTRA_EDIT_ENTRY_ID = "extra_edit_entry_id"
     }
 }

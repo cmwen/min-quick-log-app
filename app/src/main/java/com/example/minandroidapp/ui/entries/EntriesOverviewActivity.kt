@@ -10,9 +10,10 @@ import com.example.minandroidapp.R
 import com.example.minandroidapp.data.QuickLogRepository
 import com.example.minandroidapp.data.db.LogDatabase
 import com.example.minandroidapp.databinding.ActivityEntriesOverviewBinding
+import com.example.minandroidapp.settings.ThemeManager
 import com.google.android.material.tabs.TabLayoutMediator
 
-class EntriesOverviewActivity : AppCompatActivity(), EntryShareHandler {
+class EntriesOverviewActivity : AppCompatActivity(), EntryActionHandler {
 
     private lateinit var binding: ActivityEntriesOverviewBinding
 
@@ -23,6 +24,7 @@ class EntriesOverviewActivity : AppCompatActivity(), EntryShareHandler {
     private val viewModel: EntriesOverviewViewModel by viewModels { viewModelFactory }
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        ThemeManager.applySavedTheme(this)
         super.onCreate(savedInstanceState)
         binding = ActivityEntriesOverviewBinding.inflate(layoutInflater)
         setContentView(binding.root)
@@ -82,15 +84,24 @@ class EntriesOverviewActivity : AppCompatActivity(), EntryShareHandler {
     }
 
     override fun onShareEntry(entry: com.example.minandroidapp.model.LogEntry) {
-        val text = viewModel.formatSharePreview(entry)
+        val payload = viewModel.buildSharePayload(entry)
         val shareIntent = Intent(Intent.ACTION_SEND).apply {
             type = "text/plain"
-            putExtra(Intent.EXTRA_TEXT, text)
+            putExtra(Intent.EXTRA_TEXT, payload.plain)
+            putExtra(Intent.EXTRA_HTML_TEXT, payload.html)
         }
         startActivity(Intent.createChooser(shareIntent, getString(com.example.minandroidapp.R.string.share_entry)))
     }
+
+    override fun onEditEntry(entry: com.example.minandroidapp.model.LogEntry) {
+        val intent = Intent(this, MainActivity::class.java)
+            .putExtra(MainActivity.EXTRA_EDIT_ENTRY_ID, entry.id)
+            .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+        startActivity(intent)
+    }
 }
 
-interface EntryShareHandler {
+interface EntryActionHandler {
     fun onShareEntry(entry: com.example.minandroidapp.model.LogEntry)
+    fun onEditEntry(entry: com.example.minandroidapp.model.LogEntry)
 }

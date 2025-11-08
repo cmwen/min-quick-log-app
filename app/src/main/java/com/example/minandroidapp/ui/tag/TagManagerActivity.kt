@@ -15,6 +15,7 @@ import com.example.minandroidapp.data.db.LogDatabase
 import com.example.minandroidapp.databinding.ActivityTagManagerBinding
 import com.example.minandroidapp.model.TagRelations
 import com.example.minandroidapp.ui.entries.EntriesOverviewActivity
+import com.example.minandroidapp.settings.ThemeManager
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.launch
@@ -45,6 +46,7 @@ class TagManagerActivity : AppCompatActivity() {
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        ThemeManager.applySavedTheme(this)
         super.onCreate(savedInstanceState)
         binding = ActivityTagManagerBinding.inflate(layoutInflater)
         setContentView(binding.root)
