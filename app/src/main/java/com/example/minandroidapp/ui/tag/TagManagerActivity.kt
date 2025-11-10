@@ -19,6 +19,7 @@ import com.example.minandroidapp.data.db.LogDatabase
 import com.example.minandroidapp.databinding.ActivityTagManagerBinding
 import com.example.minandroidapp.model.TagRelations
 import com.example.minandroidapp.ui.entries.EntriesOverviewActivity
+import com.example.minandroidapp.ui.common.SwipeToDeleteCallback
 import com.example.minandroidapp.settings.ThemeManager
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
@@ -252,7 +253,7 @@ class TagManagerActivity : AppCompatActivity() {
     }
 
     private fun attachSwipeToDelete() {
-        val swipeCallback = object : ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT) {
+        val swipeCallback = object : SwipeToDeleteCallback(this@TagManagerActivity) {
             override fun onMove(
                 recyclerView: RecyclerView,
                 viewHolder: RecyclerView.ViewHolder,

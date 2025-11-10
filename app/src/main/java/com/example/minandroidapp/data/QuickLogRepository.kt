@@ -243,6 +243,14 @@ class QuickLogRepository(private val database: LogDatabase) {
         }
     }
 
+    suspend fun deleteEntries(entryIds: List<Long>) {
+        if (entryIds.isEmpty()) return
+        database.withTransaction {
+            entryDao.deleteEntryTags(entryIds)
+            entryDao.deleteEntries(entryIds)
+        }
+    }
+
     private fun String.escapeCsv(): String =
         if (contains(',') || contains('"')) "\"${replace("\"", "\"\"")}\"" else this
 

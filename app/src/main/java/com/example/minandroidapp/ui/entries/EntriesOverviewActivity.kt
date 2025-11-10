@@ -2,20 +2,27 @@ package com.example.minandroidapp.ui.entries
 
 import android.content.Intent
 import android.os.Bundle
+import android.view.MenuItem
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.lifecycleScope
 import androidx.viewpager2.adapter.FragmentStateAdapter
+import androidx.viewpager2.widget.ViewPager2
 import com.example.minandroidapp.MainActivity
 import com.example.minandroidapp.R
 import com.example.minandroidapp.data.QuickLogRepository
 import com.example.minandroidapp.data.db.LogDatabase
 import com.example.minandroidapp.databinding.ActivityEntriesOverviewBinding
 import com.example.minandroidapp.settings.ThemeManager
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.tabs.TabLayoutMediator
+import kotlinx.coroutines.launch
 
 class EntriesOverviewActivity : AppCompatActivity(), EntryActionHandler {
 
     private lateinit var binding: ActivityEntriesOverviewBinding
+    private var deleteMenuItem: MenuItem? = null
 
     val viewModelFactory: EntriesOverviewViewModel.Factory by lazy {
         EntriesOverviewViewModel.Factory(QuickLogRepository(LogDatabase.getInstance(applicationContext)))
@@ -30,7 +37,23 @@ class EntriesOverviewActivity : AppCompatActivity(), EntryActionHandler {
         setContentView(binding.root)
 
         setSupportActionBar(binding.entriesToolbar)
-        binding.entriesToolbar.setNavigationOnClickListener { finish() }
+        binding.entriesToolbar.inflateMenu(R.menu.menu_entries_overview)
+        deleteMenuItem = binding.entriesToolbar.menu.findItem(R.id.action_delete_entries)?.apply {
+            isVisible = false
+        }
+        binding.entriesToolbar.setOnMenuItemClickListener { item ->
+            when (item.itemId) {
+                R.id.action_delete_entries -> {
+                    confirmDeleteEntries()
+                    true
+                }
+                else -> false
+            }
+        }
+        binding.entriesToolbar.setNavigationOnClickListener {
+            viewModel.clearEntrySelection()
+            finish()
+        }
 
         val adapter = EntriesPagerAdapter(this)
         binding.entriesPager.adapter = adapter
@@ -43,6 +66,20 @@ class EntriesOverviewActivity : AppCompatActivity(), EntryActionHandler {
                 else -> getString(com.example.minandroidapp.R.string.entries_tab_stats)
             }
         }.attach()
+
+        binding.entriesPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
+            override fun onPageSelected(position: Int) {
+                if (position >= 2) {
+                    viewModel.clearEntrySelection()
+                }
+            }
+        })
+
+        lifecycleScope.launch {
+            viewModel.selectedEntryIds.collect { ids ->
+                updateEntrySelectionUi(ids.size)
+            }
+        }
 
         setupBottomNav()
     }
@@ -64,6 +101,40 @@ class EntriesOverviewActivity : AppCompatActivity(), EntryActionHandler {
                 }
                 else -> false
             }
+        }
+    }
+
+    private fun confirmDeleteEntries() {
+        val count = viewModel.selectedEntryIds.value.size
+        if (count == 0) return
+        MaterialAlertDialogBuilder(this)
+            .setTitle(R.string.delete_entries)
+            .setMessage(getString(R.string.delete_entries_confirm_message, count))
+            .setPositiveButton(R.string.delete_action) { _, _ ->
+                viewModel.deleteSelectedEntries { success ->
+                    showDeleteResult(success, count)
+                }
+            }
+            .setNegativeButton(android.R.string.cancel, null)
+            .show()
+    }
+
+    private fun showDeleteResult(success: Boolean, count: Int) {
+        val messageRes = if (success) {
+            R.string.delete_entries_success
+        } else {
+            R.string.delete_entries_failure
+        }
+        val text = if (success) getString(messageRes, count) else getString(messageRes)
+        Snackbar.make(binding.root, text, Snackbar.LENGTH_LONG).show()
+    }
+
+    private fun updateEntrySelectionUi(count: Int) {
+        deleteMenuItem?.isVisible = count > 0
+        binding.entriesToolbar.subtitle = if (count > 0) {
+            resources.getQuantityString(R.plurals.entry_selection_count, count, count)
+        } else {
+            null
         }
     }
 

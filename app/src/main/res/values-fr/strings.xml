@@ -62,6 +62,10 @@
     <string name="delete_tags_success">%1$d étiquettes supprimées</string>
     <string name="delete_tags_failure">Impossible de supprimer les étiquettes</string>
     <string name="delete_action">Supprimer</string>
+    <string name="delete_entries">Supprimer des entrées</string>
+    <string name="delete_entries_confirm_message">Supprimer %1$d entrées sélectionnées\u00A0? Cette action est irréversible.</string>
+    <string name="delete_entries_success">%1$d entrées supprimées</string>
+    <string name="delete_entries_failure">Impossible de supprimer les entrées</string>
     <string name="settings">Paramètres</string>
     <string name="theme">Thème</string>
     <string name="theme_system">Suivre le système</string>
@@ -72,5 +76,9 @@
     <plurals name="tag_selection_count">
         <item quantity="one">%d sélectionnée</item>
         <item quantity="other">%d sélectionnées</item>
+    </plurals>
+    <plurals name="entry_selection_count">
+        <item quantity="one">%d entrée sélectionnée</item>
+        <item quantity="other">%d entrées sélectionnées</item>
     </plurals>
 </resources>
