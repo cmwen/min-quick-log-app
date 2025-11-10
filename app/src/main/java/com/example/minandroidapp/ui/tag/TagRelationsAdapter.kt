@@ -2,6 +2,7 @@ package com.example.minandroidapp.ui.tag
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -16,9 +17,11 @@ class TagRelationsAdapter(
 ) : ListAdapter<TagRelations, TagRelationsAdapter.TagRelationViewHolder>(DIFF) {
 
     private var selectedIds: Set<String> = emptySet()
+    private var selectionMode: Boolean = false
 
     fun setSelection(ids: Set<String>) {
         selectedIds = ids.toSet()
+        selectionMode = selectedIds.isNotEmpty()
         notifyDataSetChanged()
     }
 
@@ -59,6 +62,15 @@ class TagRelationsAdapter(
                 },
             )
             binding.root.strokeWidth = strokeWidth
+
+            val isSelected = selectedIds.contains(relations.tag.id)
+            binding.tagSelectionCheck.setOnCheckedChangeListener(null)
+            binding.tagSelectionCheck.isVisible = selectionMode
+            binding.tagSelectionCheck.isChecked = isSelected
+            binding.tagSelectionCheck.setOnCheckedChangeListener { _, _ ->
+                onToggleSelection(relations)
+            }
+
             binding.root.setOnLongClickListener {
                 onToggleSelection(relations)
                 true
@@ -68,6 +80,8 @@ class TagRelationsAdapter(
                     onToggleSelection(relations)
                 }
             }
+
+            binding.editConnectionsButton.isEnabled = !selectionMode
         }
     }
 

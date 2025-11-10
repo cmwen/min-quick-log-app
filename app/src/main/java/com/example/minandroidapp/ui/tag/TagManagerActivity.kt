@@ -10,6 +10,8 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.ItemTouchHelper
 import com.example.minandroidapp.MainActivity
 import com.example.minandroidapp.R
 import com.example.minandroidapp.data.QuickLogRepository
@@ -101,6 +103,7 @@ class TagManagerActivity : AppCompatActivity() {
         adapter.setSelection(emptySet())
         binding.tagRecycler.layoutManager = LinearLayoutManager(this)
         binding.tagRecycler.adapter = adapter
+        attachSwipeToDelete()
 
         lifecycleScope.launch {
             viewModel.tagRelations.collect { relations ->
@@ -210,18 +213,82 @@ class TagManagerActivity : AppCompatActivity() {
 
     private fun performDeleteSelection() {
         val ids = selectedTagIds.toList()
+        deleteTagsByIds(
+            ids,
+            onSuccess = { clearSelectionIfNeeded() },
+        )
+    }
+
+    private fun deleteTagsByIds(
+        ids: List<String>,
+        onSuccess: () -> Unit = {},
+        onFailure: () -> Unit = {},
+    ) {
+        if (ids.isEmpty()) {
+            onFailure()
+            return
+        }
         viewModel.deleteTags(ids) { success ->
             if (success) {
+                removeIdsFromSelection(ids)
                 Snackbar.make(
                     binding.root,
                     getString(R.string.delete_tags_success, ids.size),
                     Snackbar.LENGTH_LONG,
                 ).show()
-                clearSelectionIfNeeded()
+                onSuccess()
             } else {
                 Snackbar.make(binding.root, R.string.delete_tags_failure, Snackbar.LENGTH_LONG).show()
+                onFailure()
             }
         }
+    }
+
+    private fun removeIdsFromSelection(ids: List<String>) {
+        if (selectedTagIds.removeAll(ids.toSet())) {
+            adapter.setSelection(selectedTagIds)
+            updateSelectionUi()
+        }
+    }
+
+    private fun attachSwipeToDelete() {
+        val swipeCallback = object : ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT) {
+            override fun onMove(
+                recyclerView: RecyclerView,
+                viewHolder: RecyclerView.ViewHolder,
+                target: RecyclerView.ViewHolder,
+            ): Boolean = false
+
+            override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+                val position = viewHolder.bindingAdapterPosition
+                val relations = adapter.currentList.getOrNull(position)
+                if (relations == null) {
+                    adapter.notifyItemChanged(position)
+                    return
+                }
+                confirmSwipeDelete(relations, position)
+            }
+        }
+        ItemTouchHelper(swipeCallback).attachToRecyclerView(binding.tagRecycler)
+    }
+
+    private fun confirmSwipeDelete(relations: TagRelations, adapterPosition: Int) {
+        MaterialAlertDialogBuilder(this)
+            .setTitle(getString(R.string.delete_tags))
+            .setMessage(getString(R.string.delete_tags_confirm_message, 1))
+            .setPositiveButton(R.string.delete_action) { _, _ ->
+                deleteTagsByIds(
+                    listOf(relations.tag.id),
+                    onFailure = { adapter.notifyItemChanged(adapterPosition) },
+                )
+            }
+            .setNegativeButton(android.R.string.cancel) { _, _ ->
+                adapter.notifyItemChanged(adapterPosition)
+            }
+            .setOnCancelListener {
+                adapter.notifyItemChanged(adapterPosition)
+            }
+            .show()
     }
 
     private suspend fun exportTags(uri: Uri) {
