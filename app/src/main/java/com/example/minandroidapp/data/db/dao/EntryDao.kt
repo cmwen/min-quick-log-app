@@ -53,4 +53,20 @@ interface EntryDao {
         """,
     )
     suspend fun deleteEntry(entryId: Long)
+
+    @Query(
+        value = """
+            DELETE FROM entry_tags
+            WHERE entryId IN (:entryIds)
+        """,
+    )
+    suspend fun deleteEntryTags(entryIds: List<Long>)
+
+    @Query(
+        value = """
+            DELETE FROM entries
+            WHERE id IN (:entryIds)
+        """,
+    )
+    suspend fun deleteEntries(entryIds: List<Long>)
 }

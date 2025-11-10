@@ -12,9 +12,11 @@ import java.time.format.DateTimeFormatter
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.launch
 
 class EntriesOverviewViewModel(private val repository: QuickLogRepository) : ViewModel() {
 
@@ -22,6 +24,8 @@ class EntriesOverviewViewModel(private val repository: QuickLogRepository) : Vie
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), emptyList())
 
     private val tagQuery = MutableStateFlow("")
+    private val _selectedEntryIds = MutableStateFlow<Set<Long>>(emptySet())
+    val selectedEntryIds: StateFlow<Set<Long>> = _selectedEntryIds.asStateFlow()
 
     private val dateFormatter = DateTimeFormatter.ofPattern("EEE, MMM d")
         .withZone(ZoneId.systemDefault())
@@ -118,6 +122,18 @@ class EntriesOverviewViewModel(private val repository: QuickLogRepository) : Vie
         }
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), emptyList())
 
+    init {
+        viewModelScope.launch {
+            entriesFlow.collect { entries ->
+                val existingIds = entries.map { it.id }.toSet()
+                val filteredSelection = _selectedEntryIds.value.filter { existingIds.contains(it) }.toSet()
+                if (filteredSelection.size != _selectedEntryIds.value.size) {
+                    _selectedEntryIds.value = filteredSelection
+                }
+            }
+        }
+    }
+
     fun buildSharePayload(entry: LogEntry): EntrySharePayload {
         val timestamp = shareFormatter.format(entry.createdAt)
         val tagsBlock = entry.tags.joinToString(separator = ", ") { it.label }
@@ -153,6 +169,40 @@ class EntriesOverviewViewModel(private val repository: QuickLogRepository) : Vie
             .eachCount()
             .map { StatCount(it.key, it.value) }
             .sortedByDescending { it.count }
+    }
+
+    fun toggleEntrySelection(entryId: Long) {
+        val updated = _selectedEntryIds.value.toMutableSet().apply {
+            if (!add(entryId)) {
+                remove(entryId)
+            }
+        }
+        _selectedEntryIds.value = updated
+    }
+
+    fun clearEntrySelection() {
+        if (_selectedEntryIds.value.isNotEmpty()) {
+            _selectedEntryIds.value = emptySet()
+        }
+    }
+
+    fun deleteEntries(entryIds: List<Long>, onComplete: (Boolean) -> Unit) {
+        if (entryIds.isEmpty()) {
+            onComplete(false)
+            return
+        }
+        viewModelScope.launch {
+            runCatching { repository.deleteEntries(entryIds) }
+                .onSuccess {
+                    _selectedEntryIds.value = _selectedEntryIds.value - entryIds.toSet()
+                    onComplete(true)
+                }
+                .onFailure { onComplete(false) }
+        }
+    }
+
+    fun deleteSelectedEntries(onComplete: (Boolean) -> Unit) {
+        deleteEntries(_selectedEntryIds.value.toList(), onComplete)
     }
 
     class Factory(private val repository: QuickLogRepository) : ViewModelProvider.Factory {

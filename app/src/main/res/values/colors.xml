@@ -7,4 +7,5 @@
     <color name="md_theme_surface">#FFFBFE</color>
     <color name="md_theme_onSurface">#1C1B1F</color>
     <color name="ic_launcher_background">#0F172A</color>
+    <color name="swipe_delete_background">#B3261E</color>
 </resources>

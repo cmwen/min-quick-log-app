@@ -4,12 +4,14 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.minandroidapp.R
 import com.example.minandroidapp.model.LogEntry
 import com.example.minandroidapp.model.LogTag
+import com.google.android.material.checkbox.MaterialCheckBox
 import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipGroup
 import java.time.ZoneId
@@ -19,7 +21,10 @@ import java.util.Locale
 class EntriesListAdapter(
     private val onEntryClicked: (LogEntry) -> Unit,
     private val onShareClicked: (LogEntry) -> Unit,
+    private val onToggleSelection: (LogEntry) -> Unit,
 ) : ListAdapter<EntryListItem, RecyclerView.ViewHolder>(DIFF) {
+
+    private var selectedIds: Set<Long> = emptySet()
 
     override fun getItemViewType(position: Int): Int = when (getItem(position)) {
         is EntryListItem.Header -> VIEW_HEADER
@@ -33,7 +38,7 @@ class EntriesListAdapter(
             HeaderViewHolder(view)
         } else {
             val view = inflater.inflate(R.layout.item_entry, parent, false)
-            EntryViewHolder(view, onEntryClicked, onShareClicked)
+            EntryViewHolder(view)
         }
     }
 
@@ -44,6 +49,16 @@ class EntriesListAdapter(
         }
     }
 
+    fun setSelection(ids: Set<Long>) {
+        selectedIds = ids
+        notifyDataSetChanged()
+    }
+
+    fun getEntryAt(position: Int): LogEntry? =
+        currentList.getOrNull(position)?.let { item ->
+            if (item is EntryListItem.Entry) item.logEntry else null
+        }
+
     private class HeaderViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         private val title: TextView = view.findViewById(R.id.sectionTitle)
         fun bind(text: String) {
@@ -51,17 +66,14 @@ class EntriesListAdapter(
         }
     }
 
-    private class EntryViewHolder(
-        itemView: View,
-        private val onEntryClicked: (LogEntry) -> Unit,
-        private val onShareClicked: (LogEntry) -> Unit,
-    ) : RecyclerView.ViewHolder(itemView) {
+    private inner class EntryViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
         private val timestampView: TextView = itemView.findViewById(R.id.entryTimestamp)
         private val locationView: TextView = itemView.findViewById(R.id.entryLocation)
         private val tagsGroup: ChipGroup = itemView.findViewById(R.id.entryTagsGroup)
         private val noteView: TextView = itemView.findViewById(R.id.entryNote)
         private val shareButton: View = itemView.findViewById(R.id.shareButton)
+        private val selectionCheck: MaterialCheckBox = itemView.findViewById(R.id.entrySelectionCheck)
 
         private val formatter = DateTimeFormatter.ofPattern("EEE, MMM d • HH:mm", Locale.getDefault())
             .withZone(ZoneId.systemDefault())
@@ -79,8 +91,34 @@ class EntriesListAdapter(
                 noteView.visibility = View.VISIBLE
                 noteView.text = entry.note
             }
-            itemView.setOnClickListener { onEntryClicked(entry) }
-            shareButton.setOnClickListener { onShareClicked(entry) }
+            val selectionMode = selectedIds.isNotEmpty()
+            val isSelected = selectedIds.contains(entry.id)
+            selectionCheck.setOnCheckedChangeListener(null)
+            selectionCheck.isVisible = selectionMode
+            selectionCheck.isChecked = isSelected
+            selectionCheck.setOnCheckedChangeListener { _, _ ->
+                onToggleSelection(entry)
+            }
+
+            shareButton.isEnabled = !selectionMode
+            shareButton.alpha = if (selectionMode) 0.5f else 1f
+
+            itemView.setOnClickListener {
+                if (selectionMode) {
+                    onToggleSelection(entry)
+                } else {
+                    onEntryClicked(entry)
+                }
+            }
+            itemView.setOnLongClickListener {
+                onToggleSelection(entry)
+                true
+            }
+            shareButton.setOnClickListener {
+                if (!selectionMode) {
+                    onShareClicked(entry)
+                }
+            }
         }
 
         private fun buildTagChip(tag: LogTag): Chip {
@@ -92,8 +130,8 @@ class EntriesListAdapter(
     }
 
     companion object {
-        private const val VIEW_HEADER = 0
-        private const val VIEW_ENTRY = 1
+        const val VIEW_HEADER = 0
+        const val VIEW_ENTRY = 1
 
         private val DIFF = object : DiffUtil.ItemCallback<EntryListItem>() {
             override fun areItemsTheSame(oldItem: EntryListItem, newItem: EntryListItem): Boolean {

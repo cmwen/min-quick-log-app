@@ -62,6 +62,10 @@
     <string name="delete_tags_success">Se eliminaron %1$d etiquetas</string>
     <string name="delete_tags_failure">No se pudieron eliminar las etiquetas</string>
     <string name="delete_action">Eliminar</string>
+    <string name="delete_entries">Eliminar entradas</string>
+    <string name="delete_entries_confirm_message">¿Eliminar %1$d entradas seleccionadas? Esta acción no se puede deshacer.</string>
+    <string name="delete_entries_success">Se eliminaron %1$d entradas</string>
+    <string name="delete_entries_failure">No se pudieron eliminar las entradas</string>
     <string name="settings">Configuración</string>
     <string name="theme">Tema</string>
     <string name="theme_system">Seguir el sistema</string>
@@ -72,5 +76,9 @@
     <plurals name="tag_selection_count">
         <item quantity="one">%d seleccionada</item>
         <item quantity="other">%d seleccionadas</item>
+    </plurals>
+    <plurals name="entry_selection_count">
+        <item quantity="one">%d entrada seleccionada</item>
+        <item quantity="other">%d entradas seleccionadas</item>
     </plurals>
 </resources>
