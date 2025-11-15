@@ -189,6 +189,20 @@ class QuickLogRepository(private val database: LogDatabase) {
         val related = links.groupBy { it.parentTagId }
             .mapValues { entry -> entry.value.map { it.childTagId }.toSet() }
         return buildString {
+            // Add helpful header comment with LLM prompt
+            append("# Quick Log Tags Export\n")
+            append("# \n")
+            append("# PROMPT FOR LLM TO IMPROVE TAGS:\n")
+            append("# Please analyze the tags below and suggest improvements:\n")
+            append("# 1. Identify missing tags that would be useful based on the existing patterns\n")
+            append("# 2. Suggest better tag relationships (related_ids) to improve context awareness\n")
+            append("# 3. Recommend more specific or clearer labels where needed\n")
+            append("# 4. Propose new categories if appropriate (PERSON, ACTIVITY, PLACE, CONTEXT, MOOD, CUSTOM)\n")
+            append("# 5. Return the improved tags in the same CSV format below (including new tags)\n")
+            append("# \n")
+            append("# FORMAT: id,label,category,related_ids (pipe-separated)\n")
+            append("# EXAMPLE: tag_work,Work,ACTIVITY,tag_office|tag_focus|tag_meeting\n")
+            append("# \n")
             append("id,label,category,related_ids\n")
             tags.forEach { tag ->
                 val relatedIds = related[tag.id]?.joinToString(separator = "|") ?: ""
@@ -203,7 +217,9 @@ class QuickLogRepository(private val database: LogDatabase) {
 
     suspend fun importTagsCsv(csv: String): Int {
         val lines = csv.lineSequence()
-            .drop(1)
+            .filter { it.isNotBlank() && !it.trim().startsWith("#") } // Skip comments
+            .dropWhile { !it.contains("id,label,category") } // Skip until header
+            .drop(1) // Skip the header itself
             .filter { it.isNotBlank() }
             .toList()
         if (lines.isEmpty()) return 0
@@ -213,10 +229,11 @@ class QuickLogRepository(private val database: LogDatabase) {
         lines.forEach { line ->
             val columns = parseCsvLine(line)
             if (columns.size < 3) return@forEach
-            val id = columns[0].ifBlank { "import_${UUID.randomUUID()}" }
-            val label = columns[1].ifBlank { id }
-            val category = columns.getOrNull(2)?.let { runCatching { TagCategory.valueOf(it) }.getOrNull() }
-                ?: TagCategory.CUSTOM
+            val id = columns[0].trim().ifBlank { "import_${UUID.randomUUID()}" }
+            val label = columns[1].trim().ifBlank { id }
+            val category = columns.getOrNull(2)?.trim()?.let { 
+                runCatching { TagCategory.valueOf(it.uppercase()) }.getOrNull() 
+            } ?: TagCategory.CUSTOM
             tags += TagEntity(id = id, label = label, category = category)
             val relatedColumn = columns.getOrNull(3).orEmpty()
             relatedColumn.split('|')
