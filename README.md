@@ -11,6 +11,7 @@ Quick Log is a lightweight Android 14+ companion for capturing what just happene
 - Dark theme ready: Material 3 styling honours system light/dark settings out of the box.
 - Personal vocab: create custom tags on the fly, manage them from the Tag Map screen, import/export CSVs, or bulk-delete labels when vocabularies change.
 - Sense-making views: switch to the Entries Overview to slice logs by date, location, or tag, review stats, run tag searches, and share CSV snapshots.
+- Location map: visualize where you've been on an interactive OpenStreetMap, filter by date range, view chronological timelines, and export location data in LLM-friendly JSON or CSV formats for advanced analysis.
 - Localised UI: ship-ready English, Spanish, and French strings keep workflows familiar for multilingual teams.
 
 ## Getting started
@@ -23,6 +24,9 @@ Quick Log is a lightweight Android 14+ companion for capturing what just happene
 - Launch the debug build on an Android 14+ device or emulator.
 - Grant location access when prompted to enrich entries with a place label (falling back to coordinates if no reverse geocode is available).
 - Tap an existing entry to edit tags or notes; hold onto the Export action in the top bar to share your log as Markdown-style bullets.
+- Access the Location Map from the toolbar to see your logged locations on an interactive map, filter by date, and export data for LLM analysis.
+
+For detailed information about the Location Map feature, see `docs/location-map-feature.md`.
 
 ## Project layout
 

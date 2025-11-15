@@ -43,6 +43,10 @@ class EntriesOverviewActivity : AppCompatActivity(), EntryActionHandler {
         }
         binding.entriesToolbar.setOnMenuItemClickListener { item ->
             when (item.itemId) {
+                R.id.action_location_map -> {
+                    startActivity(Intent(this, com.example.minandroidapp.ui.map.LocationMapActivity::class.java))
+                    true
+                }
                 R.id.action_delete_entries -> {
                     confirmDeleteEntries()
                     true

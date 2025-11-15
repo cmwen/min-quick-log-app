@@ -67,6 +67,7 @@ dependencies {
     implementation(libs.play.services.location)
     coreLibraryDesugaring(libs.desugar.jdk)
     implementation(libs.fragment.ktx)
+    implementation(libs.osmdroid.android)
 
     testImplementation(libs.junit4)
     androidTestImplementation(libs.androidx.junit)

@@ -143,6 +143,9 @@ class MainActivity : AppCompatActivity() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
+            R.id.action_location_map -> {
+                openLocationMap(); true
+            }
             R.id.action_entries_overview -> {
                 openEntriesOverview(); true
             }
@@ -368,6 +371,10 @@ class MainActivity : AppCompatActivity() {
 
     private fun openTagManager() {
         startActivity(Intent(this, TagManagerActivity::class.java))
+    }
+
+    private fun openLocationMap() {
+        startActivity(Intent(this, com.example.minandroidapp.ui.map.LocationMapActivity::class.java))
     }
 
     private fun openEntriesOverview() {
