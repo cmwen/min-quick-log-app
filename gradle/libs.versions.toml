@@ -1,5 +1,5 @@
 [versions]
-androidGradlePlugin = "8.4.0"
+androidGradlePlugin = "8.13.1"
 kotlin = "2.0.21"
 coreKtx = "1.13.1"
 lifecycleRuntimeKtx = "2.8.7"
