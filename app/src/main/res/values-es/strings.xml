@@ -81,4 +81,18 @@
         <item quantity="one">%d entrada seleccionada</item>
         <item quantity="other">%d entradas seleccionadas</item>
     </plurals>
+    <string name="location_map_title">Mapa de Ubicaciones</string>
+    <string name="map_entries_count">%1$d entradas</string>
+    <string name="map_all_dates">Todas las fechas</string>
+    <string name="map_date_filter">%1$s – %2$s</string>
+    <string name="map_filter_dates">Filtrar Fechas</string>
+    <string name="map_clear_filter">Limpiar</string>
+    <string name="map_show_timeline">Línea de Tiempo</string>
+    <string name="map_select_date_range">Seleccionar Rango de Fechas</string>
+    <string name="map_timeline_title">Línea de Tiempo de Ubicaciones</string>
+    <string name="no_location_entries">No hay entradas de ubicación para mostrar</string>
+    <string name="export_location_data">Exportar Datos de Ubicación</string>
+    <string name="export_location_json">Exportar como JSON (compatible con LLM)</string>
+    <string name="export_location_csv">Exportar como CSV</string>
+    <string name="location_map">Mapa de Ubicaciones</string>
 </resources>

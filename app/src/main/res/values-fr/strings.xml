@@ -81,4 +81,18 @@
         <item quantity="one">%d entrée sélectionnée</item>
         <item quantity="other">%d entrées sélectionnées</item>
     </plurals>
+    <string name="location_map_title">Carte de Localisation</string>
+    <string name="map_entries_count">%1$d entrées</string>
+    <string name="map_all_dates">Toutes les dates</string>
+    <string name="map_date_filter">%1$s – %2$s</string>
+    <string name="map_filter_dates">Filtrer les Dates</string>
+    <string name="map_clear_filter">Effacer</string>
+    <string name="map_show_timeline">Chronologie</string>
+    <string name="map_select_date_range">Sélectionner la Plage de Dates</string>
+    <string name="map_timeline_title">Chronologie des Localisations</string>
+    <string name="no_location_entries">Aucune entrée de localisation à afficher</string>
+    <string name="export_location_data">Exporter les Données de Localisation</string>
+    <string name="export_location_json">Exporter en JSON (compatible LLM)</string>
+    <string name="export_location_csv">Exporter en CSV</string>
+    <string name="location_map">Carte de Localisation</string>
 </resources>
