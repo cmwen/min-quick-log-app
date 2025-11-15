@@ -87,6 +87,16 @@
     <string name="export_location_json">Export as JSON (LLM-friendly)</string>
     <string name="export_location_csv">Export as CSV</string>
     <string name="location_map">Location Map</string>
+    <string name="help_export_import">Help: Export/Import Tags</string>
+    <string name="help_export_import_title">Export/Import Tags</string>
+    <string name="help_export_import_message">
+        <b>How to improve your tags with AI:</b>\n\n
+        1. <b>Export:</b> Tap Export to save your tags as CSV\n\n
+        2. <b>Share to LLM:</b> Share the CSV file with your favorite AI assistant (ChatGPT, Claude, Gemini, etc.)\n\n
+        3. <b>Get Improvements:</b> The CSV includes a prompt to help the AI suggest better tags, relationships, and new ideas\n\n
+        4. <b>Import:</b> Copy the improved CSV from the AI and import it back using the Import option\n\n
+        <b>Tip:</b> You can also manually edit the CSV file before importing!
+    </string>
     <plurals name="tag_selection_count">
         <item quantity="one">%d selected</item>
         <item quantity="other">%d selected</item>
