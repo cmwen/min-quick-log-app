@@ -15,8 +15,9 @@ coroutines = "1.10.2"
 recyclerView = "1.4.0"
 playServicesLocation = "21.3.0"
 lifecycleViewModelKtx = "2.9.4"
-desugar = "2.0.4"
+desugar = "2.1.5"
 fragmentKtx = "1.8.9"
+>>>>>>> f93edec (deps(deps): bump com.android.tools:desugar_jdk_libs from 2.0.4 to 2.1.5)
 osmdroid = "6.1.18"
 
 [libraries]
