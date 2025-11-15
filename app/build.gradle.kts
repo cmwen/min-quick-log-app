@@ -6,7 +6,7 @@ plugins {
 
 android {
     namespace = "com.example.minandroidapp"
-    compileSdk = 34
+    compileSdk = 36
 
     defaultConfig {
         val fallbackVersionCode = providers.gradleProperty("APP_VERSION_CODE")

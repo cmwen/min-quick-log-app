@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.example.minandroidapp.data.QuickLogRepository
+import com.example.minandroidapp.model.LogEntry
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -36,14 +37,14 @@ class LocationMapViewModel(private val repository: QuickLogRepository) : ViewMod
                     entries
                 }
 
-                _locationEntries.value = filtered.map { entry ->
+                _locationEntries.value = filtered.map { entry: LogEntry ->
                     LocationEntry(
                         id = entry.id,
                         createdAt = entry.createdAt,
                         latitude = entry.location.latitude,
                         longitude = entry.location.longitude,
                         locationLabel = entry.location.label,
-                        tags = entry.tags.map { it.label }
+                        tags = entry.tags.map { tag -> tag.label }
                     )
                 }
             }
