@@ -35,6 +35,12 @@ class QuickLogRepository(private val database: LogDatabase) {
         }
     }
 
+    fun observeAllEntries(): Flow<List<LogEntry>> {
+        return entryDao.observeEntries().map { entries ->
+            entries.map { it.toModel() }
+        }
+    }
+
     fun observeAllTags(): Flow<List<LogTag>> {
         return tagDao.observeAllTags().map { entities ->
             entities.map { it.toModel() }
