@@ -73,6 +73,16 @@
     <string name="theme_dark">Oscuro</string>
     <string name="find_tag_hint">Buscar etiqueta</string>
     <string name="tag_suggestions">Etiquetas populares</string>
+    <string name="help_export_import">Ayuda: Exportar/Importar Etiquetas</string>
+    <string name="help_export_import_title">Exportar/Importar Etiquetas</string>
+    <string name="help_export_import_message">
+        <b>Cómo mejorar tus etiquetas con IA:</b>\n\n
+        1. <b>Exportar:</b> Toca Exportar para guardar tus etiquetas como CSV\n\n
+        2. <b>Compartir a LLM:</b> Comparte el archivo CSV con tu asistente de IA favorito (ChatGPT, Claude, Gemini, etc.)\n\n
+        3. <b>Obtener Mejoras:</b> El CSV incluye un prompt para ayudar a la IA a sugerir mejores etiquetas, relaciones e ideas nuevas\n\n
+        4. <b>Importar:</b> Copia el CSV mejorado de la IA e impórtalo de nuevo usando la opción Importar\n\n
+        <b>Consejo:</b> ¡También puedes editar manualmente el archivo CSV antes de importarlo!
+    </string>
     <plurals name="tag_selection_count">
         <item quantity="one">%d seleccionada</item>
         <item quantity="other">%d seleccionadas</item>

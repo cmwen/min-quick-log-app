@@ -12,81 +12,55 @@ class TagSeeder(private val tagDao: TagDao) {
         }
 
         val tags = listOf(
-            TagEntity(id = "tag_me", label = "I", category = TagCategory.PERSON),
-            TagEntity(id = "tag_partner", label = "Partner", category = TagCategory.PERSON),
-            TagEntity(id = "tag_kids", label = "Kids", category = TagCategory.PERSON),
+            // Essential person tags
+            TagEntity(id = "tag_me", label = "Me", category = TagCategory.PERSON),
+            TagEntity(id = "tag_family", label = "Family", category = TagCategory.PERSON),
             TagEntity(id = "tag_friend", label = "Friend", category = TagCategory.PERSON),
-            TagEntity(id = "tag_wfh", label = "WFH", category = TagCategory.ACTIVITY),
-            TagEntity(id = "tag_jog", label = "Jog", category = TagCategory.ACTIVITY),
-            TagEntity(id = "tag_run", label = "Run", category = TagCategory.ACTIVITY),
-            TagEntity(id = "tag_lift", label = "Weight Lifting", category = TagCategory.ACTIVITY),
-            TagEntity(id = "tag_yoga", label = "Yoga", category = TagCategory.ACTIVITY),
+            
+            // Core activities
+            TagEntity(id = "tag_work", label = "Work", category = TagCategory.ACTIVITY),
+            TagEntity(id = "tag_exercise", label = "Exercise", category = TagCategory.ACTIVITY),
             TagEntity(id = "tag_meeting", label = "Meeting", category = TagCategory.ACTIVITY),
-            TagEntity(id = "tag_reading", label = "Reading", category = TagCategory.ACTIVITY),
-            TagEntity(id = "tag_coffee", label = "Coffee", category = TagCategory.ACTIVITY),
-            TagEntity(id = "tag_lunch", label = "Lunch", category = TagCategory.ACTIVITY),
-            TagEntity(id = "tag_dinner", label = "Dinner", category = TagCategory.ACTIVITY),
-            TagEntity(id = "tag_walk", label = "Walk", category = TagCategory.ACTIVITY),
-            TagEntity(id = "tag_school_run", label = "School Run", category = TagCategory.ACTIVITY),
-            TagEntity(id = "tag_family_holiday", label = "Family Holiday", category = TagCategory.CONTEXT),
-            TagEntity(id = "tag_eat_out", label = "Eat Outside", category = TagCategory.ACTIVITY),
-            TagEntity(id = "tag_weekend_trip", label = "Weekend Trip", category = TagCategory.CONTEXT),
+            TagEntity(id = "tag_meal", label = "Meal", category = TagCategory.ACTIVITY),
+            TagEntity(id = "tag_learning", label = "Learning", category = TagCategory.ACTIVITY),
+            
+            // Common places
             TagEntity(id = "tag_home", label = "Home", category = TagCategory.PLACE),
             TagEntity(id = "tag_office", label = "Office", category = TagCategory.PLACE),
             TagEntity(id = "tag_outside", label = "Outside", category = TagCategory.PLACE),
-            TagEntity(id = "tag_cafe", label = "Cafe", category = TagCategory.PLACE),
-            TagEntity(id = "tag_focus", label = "Deep Focus", category = TagCategory.CONTEXT),
+            
+            // Basic contexts and moods
+            TagEntity(id = "tag_focus", label = "Focus", category = TagCategory.CONTEXT),
             TagEntity(id = "tag_relax", label = "Relax", category = TagCategory.CONTEXT),
             TagEntity(id = "tag_energized", label = "Energized", category = TagCategory.MOOD),
             TagEntity(id = "tag_tired", label = "Tired", category = TagCategory.MOOD),
-            TagEntity(id = "tag_sore", label = "Sore", category = TagCategory.MOOD),
-            TagEntity(id = "tag_gym", label = "Gym", category = TagCategory.PLACE),
         )
 
         val links = listOf(
-            TagLinkEntity(parentTagId = "tag_me", childTagId = "tag_wfh"),
-            TagLinkEntity(parentTagId = "tag_me", childTagId = "tag_jog"),
-            TagLinkEntity(parentTagId = "tag_me", childTagId = "tag_run"),
-            TagLinkEntity(parentTagId = "tag_me", childTagId = "tag_lift"),
-            TagLinkEntity(parentTagId = "tag_me", childTagId = "tag_meeting"),
-            TagLinkEntity(parentTagId = "tag_me", childTagId = "tag_reading"),
-            TagLinkEntity(parentTagId = "tag_me", childTagId = "tag_coffee"),
+            // Me relations
+            TagLinkEntity(parentTagId = "tag_me", childTagId = "tag_work"),
+            TagLinkEntity(parentTagId = "tag_me", childTagId = "tag_exercise"),
             TagLinkEntity(parentTagId = "tag_me", childTagId = "tag_focus"),
-            TagLinkEntity(parentTagId = "tag_partner", childTagId = "tag_dinner"),
-            TagLinkEntity(parentTagId = "tag_partner", childTagId = "tag_relax"),
-            TagLinkEntity(parentTagId = "tag_partner", childTagId = "tag_walk"),
-            TagLinkEntity(parentTagId = "tag_kids", childTagId = "tag_school_run"),
-            TagLinkEntity(parentTagId = "tag_kids", childTagId = "tag_walk"),
-            TagLinkEntity(parentTagId = "tag_kids", childTagId = "tag_outside"),
-            TagLinkEntity(parentTagId = "tag_friend", childTagId = "tag_coffee"),
-            TagLinkEntity(parentTagId = "tag_friend", childTagId = "tag_lunch"),
+            
+            // Family relations
+            TagLinkEntity(parentTagId = "tag_family", childTagId = "tag_meal"),
+            TagLinkEntity(parentTagId = "tag_family", childTagId = "tag_relax"),
+            TagLinkEntity(parentTagId = "tag_family", childTagId = "tag_home"),
+            
+            // Friend relations
+            TagLinkEntity(parentTagId = "tag_friend", childTagId = "tag_meal"),
             TagLinkEntity(parentTagId = "tag_friend", childTagId = "tag_meeting"),
-            TagLinkEntity(parentTagId = "tag_friend", childTagId = "tag_cafe"),
-            TagLinkEntity(parentTagId = "tag_wfh", childTagId = "tag_home"),
-            TagLinkEntity(parentTagId = "tag_wfh", childTagId = "tag_focus"),
-            TagLinkEntity(parentTagId = "tag_wfh", childTagId = "tag_coffee"),
-            TagLinkEntity(parentTagId = "tag_jog", childTagId = "tag_outside"),
-            TagLinkEntity(parentTagId = "tag_jog", childTagId = "tag_energized"),
-            TagLinkEntity(parentTagId = "tag_run", childTagId = "tag_outside"),
-            TagLinkEntity(parentTagId = "tag_run", childTagId = "tag_energized"),
-            TagLinkEntity(parentTagId = "tag_lift", childTagId = "tag_gym"),
-            TagLinkEntity(parentTagId = "tag_lift", childTagId = "tag_sore"),
-            TagLinkEntity(parentTagId = "tag_yoga", childTagId = "tag_relax"),
-            TagLinkEntity(parentTagId = "tag_meeting", childTagId = "tag_office"),
-            TagLinkEntity(parentTagId = "tag_meeting", childTagId = "tag_focus"),
-            TagLinkEntity(parentTagId = "tag_coffee", childTagId = "tag_cafe"),
-            TagLinkEntity(parentTagId = "tag_coffee", childTagId = "tag_relax"),
-            TagLinkEntity(parentTagId = "tag_lunch", childTagId = "tag_office"),
-            TagLinkEntity(parentTagId = "tag_lunch", childTagId = "tag_relax"),
-            TagLinkEntity(parentTagId = "tag_dinner", childTagId = "tag_home"),
-            TagLinkEntity(parentTagId = "tag_dinner", childTagId = "tag_relax"),
-            TagLinkEntity(parentTagId = "tag_walk", childTagId = "tag_outside"),
-            TagLinkEntity(parentTagId = "tag_walk", childTagId = "tag_relax"),
-            TagLinkEntity(parentTagId = "tag_family_holiday", childTagId = "tag_relax"),
-            TagLinkEntity(parentTagId = "tag_family_holiday", childTagId = "tag_energized"),
-            TagLinkEntity(parentTagId = "tag_family_holiday", childTagId = "tag_weekend_trip"),
-            TagLinkEntity(parentTagId = "tag_eat_out", childTagId = "tag_cafe"),
-            TagLinkEntity(parentTagId = "tag_eat_out", childTagId = "tag_relax"),
+            
+            // Work relations
+            TagLinkEntity(parentTagId = "tag_work", childTagId = "tag_office"),
+            TagLinkEntity(parentTagId = "tag_work", childTagId = "tag_focus"),
+            TagLinkEntity(parentTagId = "tag_work", childTagId = "tag_meeting"),
+            
+            // Exercise relations
+            TagLinkEntity(parentTagId = "tag_exercise", childTagId = "tag_outside"),
+            TagLinkEntity(parentTagId = "tag_exercise", childTagId = "tag_energized"),
+            
+            // Context-mood relations
             TagLinkEntity(parentTagId = "tag_focus", childTagId = "tag_energized"),
             TagLinkEntity(parentTagId = "tag_relax", childTagId = "tag_tired"),
         )

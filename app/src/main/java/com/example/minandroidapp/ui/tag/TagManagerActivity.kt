@@ -60,6 +60,9 @@ class TagManagerActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         setSupportActionBar(binding.tagToolbar)
+        
+        // Handle incoming shared data
+        handleIncomingIntent(intent)
         onBackPressedDispatcher.addCallback(this) {
             if (!clearSelectionIfNeeded()) {
                 isEnabled = false
@@ -87,6 +90,10 @@ class TagManagerActivity : AppCompatActivity() {
                 }
                 R.id.action_delete_tags -> {
                     confirmDeleteSelection()
+                    true
+                }
+                R.id.action_help_export_import -> {
+                    showHelpDialog()
                     true
                 }
                 else -> false
@@ -167,6 +174,70 @@ class TagManagerActivity : AppCompatActivity() {
         input?.post {
             input.requestFocus()
         }
+    }
+
+    private fun showHelpDialog() {
+        MaterialAlertDialogBuilder(this)
+            .setTitle(R.string.help_export_import_title)
+            .setMessage(android.text.Html.fromHtml(
+                getString(R.string.help_export_import_message),
+                android.text.Html.FROM_HTML_MODE_LEGACY
+            ))
+            .setPositiveButton(android.R.string.ok, null)
+            .show()
+    }
+
+    override fun onNewIntent(intent: Intent) {
+        super.onNewIntent(intent)
+        setIntent(intent)
+        handleIncomingIntent(intent)
+    }
+
+    private fun handleIncomingIntent(intent: Intent?) {
+        if (intent?.action == Intent.ACTION_SEND || intent?.action == Intent.ACTION_VIEW) {
+            // Handle shared text (from LLM apps)
+            val sharedText = intent.getStringExtra(Intent.EXTRA_TEXT)
+            if (!sharedText.isNullOrEmpty()) {
+                lifecycleScope.launch {
+                    confirmImportSharedData(sharedText)
+                }
+                return
+            }
+            
+            // Handle shared URI (file)
+            val sharedUri = when (intent.action) {
+                Intent.ACTION_SEND -> intent.getParcelableExtra<Uri>(Intent.EXTRA_STREAM)
+                Intent.ACTION_VIEW -> intent.data
+                else -> null
+            }
+            if (sharedUri != null) {
+                lifecycleScope.launch {
+                    importTags(sharedUri)
+                }
+            }
+        }
+    }
+
+    private suspend fun confirmImportSharedData(csvData: String) {
+        MaterialAlertDialogBuilder(this)
+            .setTitle(R.string.import_tags)
+            .setMessage("Import ${csvData.lines().count { it.isNotBlank() && !it.startsWith("#") }} tags from shared data?")
+            .setPositiveButton(android.R.string.ok) { _, _ ->
+                lifecycleScope.launch {
+                    runCatching {
+                        val count = viewModel.importTagsCsv(csvData)
+                        Snackbar.make(
+                            binding.root,
+                            getString(R.string.import_tags_success, count),
+                            Snackbar.LENGTH_LONG,
+                        ).show()
+                    }.onFailure {
+                        Snackbar.make(binding.root, R.string.import_tags_failure, Snackbar.LENGTH_LONG).show()
+                    }
+                }
+            }
+            .setNegativeButton(android.R.string.cancel, null)
+            .show()
     }
 
     private fun toggleSelection(relations: TagRelations) {

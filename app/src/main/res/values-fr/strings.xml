@@ -73,6 +73,16 @@
     <string name="theme_dark">Sombre</string>
     <string name="find_tag_hint">Rechercher une étiquette</string>
     <string name="tag_suggestions">Étiquettes populaires</string>
+    <string name="help_export_import">Aide : Exporter/Importer des Étiquettes</string>
+    <string name="help_export_import_title">Exporter/Importer des Étiquettes</string>
+    <string name="help_export_import_message">
+        <b>Comment améliorer vos étiquettes avec l\'IA :</b>\n\n
+        1. <b>Exporter :</b> Touchez Exporter pour sauvegarder vos étiquettes en CSV\n\n
+        2. <b>Partager à LLM :</b> Partagez le fichier CSV avec votre assistant IA préféré (ChatGPT, Claude, Gemini, etc.)\n\n
+        3. <b>Obtenir des Améliorations :</b> Le CSV inclut un prompt pour aider l\'IA à suggérer de meilleures étiquettes, relations et nouvelles idées\n\n
+        4. <b>Importer :</b> Copiez le CSV amélioré de l\'IA et réimportez-le en utilisant l\'option Importer\n\n
+        <b>Astuce :</b> Vous pouvez aussi modifier manuellement le fichier CSV avant de l\'importer !
+    </string>
     <plurals name="tag_selection_count">
         <item quantity="one">%d sélectionnée</item>
         <item quantity="other">%d sélectionnées</item>
