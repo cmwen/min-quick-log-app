@@ -4,11 +4,20 @@ on:
   workflow_dispatch:
     inputs:
       version_name:
-        description: "Semantic version name (e.g. 1.2.0)"
+        description: "Semantic version name (e.g. 1.2.0, 1.2.0-beta.1, 1.2.0-rc.1)"
         required: true
       version_code:
         description: "Monotonic version code (e.g. 5)"
         required: true
+      release_type:
+        description: "Release type"
+        required: false
+        type: choice
+        options:
+          - production
+          - beta
+          - prerelease
+        default: production
       create_tag:
         description: "Create Git tag v<version_name>"
         required: false
@@ -55,6 +64,7 @@ jobs:
         run: |
           VERSION_NAME_INPUT="${{ github.event.inputs.version_name }}"
           VERSION_CODE_INPUT="${{ github.event.inputs.version_code }}"
+          RELEASE_TYPE_INPUT="${{ github.event.inputs.release_type }}"
 
           if [ -n "$VERSION_NAME_INPUT" ]; then
             VERSION_NAME="$VERSION_NAME_INPUT"
@@ -77,9 +87,37 @@ jobs:
             exit 1
           fi
 
+          # Determine release type from version name or input
+          if [ -n "$RELEASE_TYPE_INPUT" ]; then
+            RELEASE_TYPE="$RELEASE_TYPE_INPUT"
+          elif echo "$VERSION_NAME" | grep -qE '\-(beta|alpha|rc)'; then
+            if echo "$VERSION_NAME" | grep -qE '\-beta'; then
+              RELEASE_TYPE="beta"
+            else
+              RELEASE_TYPE="prerelease"
+            fi
+          else
+            RELEASE_TYPE="production"
+          fi
+
+          # Determine if this is a prerelease for GitHub
+          if [ "$RELEASE_TYPE" = "production" ]; then
+            IS_PRERELEASE="false"
+          else
+            IS_PRERELEASE="true"
+          fi
+
           echo "version_name=$VERSION_NAME" >> "$GITHUB_OUTPUT"
           echo "version_code=$VERSION_CODE" >> "$GITHUB_OUTPUT"
           echo "version_tag=v$VERSION_NAME" >> "$GITHUB_OUTPUT"
+          echo "release_type=$RELEASE_TYPE" >> "$GITHUB_OUTPUT"
+          echo "is_prerelease=$IS_PRERELEASE" >> "$GITHUB_OUTPUT"
+          
+          echo "Release metadata determined:"
+          echo "  Version Name: $VERSION_NAME"
+          echo "  Version Code: $VERSION_CODE"
+          echo "  Release Type: $RELEASE_TYPE"
+          echo "  Is Prerelease: $IS_PRERELEASE"
 
       - name: Prepare signing keystore
         env:
@@ -150,6 +188,7 @@ jobs:
         with:
           name: ${{ steps.version.outputs.version_tag }}
           tag_name: ${{ steps.version.outputs.version_tag }}
+          prerelease: ${{ steps.version.outputs.is_prerelease }}
           files: |
             app/build/outputs/apk/release/*.apk
             app/build/outputs/bundle/release/*.aab
