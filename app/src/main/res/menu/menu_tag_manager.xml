@@ -6,7 +6,7 @@
         android:title="@string/delete_tags"
         android:icon="@drawable/ic_delete"
         android:orderInCategory="1"
-        app:showAsAction="always" />
+        app:showAsAction="never" />
     <item
         android:id="@+id/action_export_tags"
         android:title="@string/export_tags"
@@ -20,9 +20,15 @@
         android:orderInCategory="3"
         app:showAsAction="always" />
     <item
+        android:id="@+id/action_copy_tag_prompt"
+        android:title="@string/copy_llm_prompt"
+        android:icon="@drawable/ic_copy"
+        android:orderInCategory="4"
+        app:showAsAction="ifRoom" />
+    <item
         android:id="@+id/action_settings"
         android:icon="@drawable/ic_settings"
         android:title="@string/settings"
-        android:orderInCategory="4"
+        android:orderInCategory="5"
         app:showAsAction="never" />
 </menu>

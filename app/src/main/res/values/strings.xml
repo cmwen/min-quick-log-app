@@ -113,6 +113,10 @@
         4. <b>Import:</b> Copy the improved CSV from the AI and import it back using the Import option\n\n
         <b>Tip:</b> You can also manually edit the CSV file before importing!
     </string>
+    <string name="copy_llm_prompt">Copy LLM prompt</string>
+    <string name="copy_llm_prompt_done">Prompt copied to clipboard</string>
+    <string name="tag_llm_prompt">Analyze these Quick Log tags in CSV form. Improve labels, categories, and related_ids. Suggest new tags if helpful. Return ONLY CSV rows using the schema: id,label,category,related_ids (pipe-separated related_ids). Keep existing IDs for edited tags.</string>
+    <string name="location_llm_prompt">You will receive Quick Log location entries in JSON with timestamp, latitude, longitude, location label, and tags. Summarize routines, highlight clusters, and suggest timeline insights. Recommend new or refined tags (return as CSV using id,label,category,related_ids). Keep responses concise.</string>
     <plurals name="tag_selection_count">
         <item quantity="one">%d selected</item>
         <item quantity="other">%d selected</item>

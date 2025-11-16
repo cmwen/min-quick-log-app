@@ -3,6 +3,30 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
+        android:id="@+id/action_export_location_json"
+        android:title="@string/export_location_json"
+        android:icon="@drawable/ic_export"
+        app:showAsAction="always" />
+
+    <item
+        android:id="@+id/action_export_location_csv"
+        android:title="@string/export_location_csv"
+        android:icon="@drawable/ic_export_csv"
+        app:showAsAction="always" />
+
+    <item
+        android:id="@+id/action_import_locations"
+        android:title="@string/import_locations"
+        android:icon="@drawable/ic_import"
+        app:showAsAction="always" />
+
+    <item
+        android:id="@+id/action_copy_location_prompt"
+        android:title="@string/copy_llm_prompt"
+        android:icon="@drawable/ic_copy"
+        app:showAsAction="ifRoom" />
+
+    <item
         android:id="@+id/action_settings"
         android:icon="@drawable/ic_settings"
         android:title="@string/settings"

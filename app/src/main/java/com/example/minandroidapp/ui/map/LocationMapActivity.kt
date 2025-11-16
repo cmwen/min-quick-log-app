@@ -1,9 +1,14 @@
 package com.example.minandroidapp.ui.map
 
+import android.content.ClipData
+import android.content.ClipboardManager
+import android.content.Context
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
@@ -40,6 +45,13 @@ class LocationMapActivity : AppCompatActivity() {
     private val dateFormatter = DateTimeFormatter.ofPattern("MMM d, yyyy")
     private var dropPinMode = false
     private var tempMarker: Marker? = null
+    private val importLocationsLauncher = registerForActivityResult(
+        ActivityResultContracts.OpenDocument()
+    ) { uri: Uri? ->
+        if (uri != null) {
+            lifecycleScope.launch { importLocations(uri) }
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         ThemeManager.applySavedTheme(this)
@@ -366,12 +378,71 @@ class LocationMapActivity : AppCompatActivity() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
+            R.id.action_export_location_json -> {
+                val json = viewModel.exportEntriesAsJson()
+                if (json.isBlank()) {
+                    Snackbar.make(binding.root, R.string.no_location_entries, Snackbar.LENGTH_LONG).show()
+                } else {
+                    val shareIntent = Intent(Intent.ACTION_SEND).apply {
+                        type = "application/json"
+                        putExtra(Intent.EXTRA_TEXT, json)
+                        putExtra(Intent.EXTRA_SUBJECT, getString(R.string.export_location_data))
+                    }
+                    startActivity(Intent.createChooser(shareIntent, getString(R.string.export_location_data)))
+                }
+                true
+            }
+            R.id.action_export_location_csv -> {
+                val csv = viewModel.exportEntriesAsCsv()
+                if (csv.isBlank()) {
+                    Snackbar.make(binding.root, R.string.no_location_entries, Snackbar.LENGTH_LONG).show()
+                } else {
+                    val shareIntent = Intent(Intent.ACTION_SEND).apply {
+                        type = "text/csv"
+                        putExtra(Intent.EXTRA_TEXT, csv)
+                        putExtra(Intent.EXTRA_SUBJECT, "quick-log-locations.csv")
+                    }
+                    startActivity(Intent.createChooser(shareIntent, getString(R.string.export_location_data)))
+                }
+                true
+            }
+            R.id.action_import_locations -> {
+                importLocationsLauncher.launch(arrayOf("text/*", "application/*"))
+                true
+            }
+            R.id.action_copy_location_prompt -> {
+                copyLocationPrompt()
+                true
+            }
             R.id.action_settings -> {
                 startActivity(Intent(this, com.example.minandroidapp.settings.SettingsActivity::class.java))
                 true
             }
             else -> super.onOptionsItemSelected(item)
         }
+    }
+
+    private suspend fun importLocations(uri: Uri) {
+        val content = runCatching {
+            contentResolver.openInputStream(uri)?.bufferedReader()?.use { it.readText() }
+        }.getOrNull()
+        if (content.isNullOrBlank()) {
+            Snackbar.make(binding.root, R.string.import_locations_failure, Snackbar.LENGTH_LONG).show()
+            return
+        }
+        runCatching {
+            val count = viewModel.importLocationsCsv(content)
+            Snackbar.make(binding.root, getString(R.string.import_locations_success, count), Snackbar.LENGTH_LONG).show()
+        }.onFailure {
+            Snackbar.make(binding.root, R.string.import_locations_failure, Snackbar.LENGTH_LONG).show()
+        }
+    }
+
+    private fun copyLocationPrompt() {
+        val clipboard = getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+        val clip = ClipData.newPlainText(getString(R.string.copy_llm_prompt), getString(R.string.location_llm_prompt))
+        clipboard.setPrimaryClip(clip)
+        Snackbar.make(binding.root, R.string.copy_llm_prompt_done, Snackbar.LENGTH_SHORT).show()
     }
 
     override fun onResume() {

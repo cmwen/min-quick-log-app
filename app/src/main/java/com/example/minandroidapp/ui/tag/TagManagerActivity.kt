@@ -1,5 +1,8 @@
 package com.example.minandroidapp.ui.tag
 
+import android.content.ClipData
+import android.content.ClipboardManager
+import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
@@ -94,6 +97,10 @@ class TagManagerActivity : AppCompatActivity() {
                 }
                 R.id.action_settings -> {
                     startActivity(Intent(this, com.example.minandroidapp.settings.SettingsActivity::class.java))
+                    true
+                }
+                R.id.action_copy_tag_prompt -> {
+                    copyTagPrompt()
                     true
                 }
                 else -> false
@@ -410,5 +417,12 @@ class TagManagerActivity : AppCompatActivity() {
                 else -> false
             }
         }
+    }
+
+    private fun copyTagPrompt() {
+        val clipboard = getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+        val clip = ClipData.newPlainText(getString(R.string.copy_llm_prompt), getString(R.string.tag_llm_prompt))
+        clipboard.setPrimaryClip(clip)
+        Snackbar.make(binding.root, R.string.copy_llm_prompt_done, Snackbar.LENGTH_SHORT).show()
     }
 }

@@ -50,7 +50,7 @@
             android:id="@+id/addLocationFab"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_margin="16dp"
+            android:layout_margin="12dp"
             android:src="@drawable/ic_location"
             android:contentDescription="@string/add_location_pin"
             app:layout_constraintEnd_toEndOf="parent"
@@ -62,7 +62,7 @@
             android:id="@+id/filterCard"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_margin="16dp"
+            android:layout_margin="12dp"
             app:layout_constraintBottom_toTopOf="@id/bottomNav"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -73,7 +73,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:padding="16dp">
+                android:padding="12dp">
 
                 <TextView
                     android:id="@+id/dateFilterText"
@@ -89,7 +89,7 @@
                     android:layout_height="wrap_content"
                     android:text="@string/map_entries_count"
                     android:textAppearance="?attr/textAppearanceBody2"
-                    android:paddingBottom="12dp"
+                    android:paddingBottom="8dp"
                     tools:text="42 entries" />
 
                 <LinearLayout

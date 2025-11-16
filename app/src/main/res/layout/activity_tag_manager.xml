@@ -11,7 +11,7 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:title="@string/tag_manager_title" />
+        android:title="@string/manage_tags" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/tagRecycler"

@@ -149,24 +149,6 @@ class MainActivity : AppCompatActivity() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
-            R.id.action_location_map -> {
-                openLocationMap(); true
-            }
-            R.id.action_entries_overview -> {
-                openEntriesOverview(); true
-            }
-            R.id.action_manage_tags -> {
-                openTagManager(); true
-            }
-            R.id.action_export_text -> {
-                exportLog(); true
-            }
-            R.id.action_export_csv -> {
-                exportCsv(); true
-            }
-            R.id.action_about -> {
-                showAboutDialog(); true
-            }
             R.id.action_settings -> {
                 startActivity(Intent(this, SettingsActivity::class.java))
                 true
@@ -202,10 +184,9 @@ class MainActivity : AppCompatActivity() {
                 renderSelectableChips(binding.recentTagsGroup, state.recentTags, state.draft.selectedTags)
                 binding.recentTagsLabel.isVisible = state.recentTags.isNotEmpty()
 
-                renderSelectableChips(binding.tagSuggestionsGroup, state.connectedTags, state.draft.selectedTags)
-                val showConnected = state.connectedTags.isNotEmpty()
-                binding.tagSuggestionsLabel.isVisible = showConnected
-                binding.tagSuggestionsGroup.isVisible = showConnected
+                // Popular tags removed from record screen UI
+                binding.tagSuggestionsLabel.isVisible = false
+                binding.tagSuggestionsGroup.isVisible = false
 
                 renderSelectableChips(binding.suggestedTagsGroup, state.suggestedTags, state.draft.selectedTags)
                 binding.suggestedTagsLabel.isVisible = state.suggestedTags.isNotEmpty()
