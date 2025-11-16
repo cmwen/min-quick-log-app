@@ -79,6 +79,7 @@ class MainActivity : AppCompatActivity() {
 
         maybeFetchLocationOnStart()
         handleEditIntent(intent)
+        handleLocationIntent(intent)
     }
 
     private fun setupInputs() {
@@ -176,7 +177,9 @@ class MainActivity : AppCompatActivity() {
 
     override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
+        setIntent(intent)
         handleEditIntent(intent)
+        handleLocationIntent(intent)
     }
 
     private fun bindViewModel() {
@@ -410,6 +413,30 @@ class MainActivity : AppCompatActivity() {
         if (entryId != -1L) {
             viewModel.beginEditing(entryId)
             binding.bottomNav.selectedItemId = R.id.nav_record
+        }
+    }
+
+    private fun handleLocationIntent(intent: Intent) {
+        val latitude = intent.getDoubleExtra("location_latitude", Double.NaN)
+        val longitude = intent.getDoubleExtra("location_longitude", Double.NaN)
+        val label = intent.getStringExtra("location_label")
+        
+        if (!latitude.isNaN() && !longitude.isNaN() && label != null) {
+            val location = EntryLocation(
+                latitude = latitude,
+                longitude = longitude,
+                label = label
+            )
+            applyLocationToDraft(location)
+            
+            // Apply default location tag if available
+            viewModel.selectTagByLabel("Location")
+            
+            binding.bottomNav.selectedItemId = R.id.nav_record
+            // Clear the intent extras to avoid reapplying on orientation change
+            intent.removeExtra("location_latitude")
+            intent.removeExtra("location_longitude")
+            intent.removeExtra("location_label")
         }
     }
 

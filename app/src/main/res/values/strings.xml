@@ -93,6 +93,12 @@
     <string name="map_select_date_range">Select Date Range</string>
     <string name="map_timeline_title">Location Timeline</string>
     <string name="no_location_entries">No location entries to display</string>
+    <string name="add_location_pin">Add location pin</string>
+    <string name="drop_pin_mode">Tap map to drop pin</string>
+    <string name="pin_dropped">Pin dropped. Tap to save location.</string>
+    <string name="save_location">Save Location</string>
+    <string name="cancel">Cancel</string>
+    <string name="location_saved">Location saved</string>
     <string name="export_location_data">Export Location Data</string>
     <string name="export_location_json">Export as JSON (LLM-friendly)</string>
     <string name="export_location_csv">Export as CSV</string>

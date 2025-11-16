@@ -13,6 +13,7 @@ import com.example.minandroidapp.R
 import com.example.minandroidapp.data.QuickLogRepository
 import com.example.minandroidapp.data.db.LogDatabase
 import com.example.minandroidapp.databinding.ActivityLocationMapBinding
+import com.example.minandroidapp.model.EntryLocation
 import com.example.minandroidapp.settings.ThemeManager
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -22,6 +23,8 @@ import org.osmdroid.config.Configuration
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory
 import org.osmdroid.util.GeoPoint
 import org.osmdroid.views.overlay.Marker
+import org.osmdroid.events.MapEventsReceiver
+import org.osmdroid.views.overlay.MapEventsOverlay
 import java.time.Instant
 import java.time.LocalDate
 import java.time.ZoneId
@@ -35,6 +38,8 @@ class LocationMapActivity : AppCompatActivity() {
     }
 
     private val dateFormatter = DateTimeFormatter.ofPattern("MMM d, yyyy")
+    private var dropPinMode = false
+    private var tempMarker: Marker? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         ThemeManager.applySavedTheme(this)
@@ -54,6 +59,7 @@ class LocationMapActivity : AppCompatActivity() {
 
         setupMap()
         setupDateFilters()
+        setupAddLocationFab()
         bindViewModel()
         setupBottomNav()
     }
@@ -66,6 +72,114 @@ class LocationMapActivity : AppCompatActivity() {
         // Default to user's current location if available, otherwise show a default location
         val defaultLocation = GeoPoint(37.7749, -122.4194) // San Francisco as default
         binding.mapView.controller.setCenter(defaultLocation)
+
+        // Add map events overlay for tap handling
+        val mapEventsOverlay = MapEventsOverlay(object : MapEventsReceiver {
+            override fun singleTapConfirmedHelper(p: GeoPoint?): Boolean {
+                if (dropPinMode && p != null) {
+                    dropPinAtLocation(p)
+                    return true
+                }
+                return false
+            }
+
+            override fun longPressHelper(p: GeoPoint?): Boolean {
+                return false
+            }
+        })
+        binding.mapView.overlays.add(0, mapEventsOverlay)
+    }
+
+    private fun setupAddLocationFab() {
+        binding.addLocationFab.setOnClickListener {
+            if (!dropPinMode) {
+                enterDropPinMode()
+            } else {
+                exitDropPinMode()
+            }
+        }
+    }
+
+    private fun enterDropPinMode() {
+        dropPinMode = true
+        binding.addLocationFab.setImageResource(android.R.drawable.ic_menu_close_clear_cancel)
+        Snackbar.make(binding.root, R.string.drop_pin_mode, Snackbar.LENGTH_LONG).show()
+    }
+
+    private fun exitDropPinMode() {
+        dropPinMode = false
+        binding.addLocationFab.setImageResource(R.drawable.ic_location)
+        removeTempMarker()
+    }
+
+    private fun dropPinAtLocation(geoPoint: GeoPoint) {
+        removeTempMarker()
+        
+        tempMarker = Marker(binding.mapView).apply {
+            position = geoPoint
+            title = getString(R.string.pin_dropped)
+            setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM)
+            isDraggable = true
+            setOnMarkerClickListener { marker, _ ->
+                showSaveLocationDialog(marker.position)
+                true
+            }
+        }
+        
+        binding.mapView.overlays.add(tempMarker)
+        binding.mapView.invalidate()
+        
+        Snackbar.make(binding.root, R.string.pin_dropped, Snackbar.LENGTH_LONG)
+            .setAction(R.string.save_location) {
+                showSaveLocationDialog(geoPoint)
+            }
+            .show()
+    }
+
+    private fun removeTempMarker() {
+        tempMarker?.let {
+            binding.mapView.overlays.remove(it)
+            binding.mapView.invalidate()
+            tempMarker = null
+        }
+    }
+
+    private fun showSaveLocationDialog(geoPoint: GeoPoint) {
+        val locationLabel = String.format("%.4f, %.4f", geoPoint.latitude, geoPoint.longitude)
+        
+        MaterialAlertDialogBuilder(this)
+            .setTitle(R.string.save_location)
+            .setMessage("Save location at:\n$locationLabel")
+            .setPositiveButton(R.string.save_entry) { _, _ ->
+                saveLocationAndOpenLog(geoPoint)
+            }
+            .setNegativeButton(R.string.cancel) { _, _ ->
+                removeTempMarker()
+            }
+            .setOnCancelListener {
+                removeTempMarker()
+            }
+            .show()
+    }
+
+    private fun saveLocationAndOpenLog(geoPoint: GeoPoint) {
+        val location = EntryLocation(
+            latitude = geoPoint.latitude,
+            longitude = geoPoint.longitude,
+            label = String.format("%.4f, %.4f", geoPoint.latitude, geoPoint.longitude)
+        )
+        
+        // Navigate to MainActivity with the location
+        val intent = Intent(this, MainActivity::class.java).apply {
+            putExtra("location_latitude", location.latitude)
+            putExtra("location_longitude", location.longitude)
+            putExtra("location_label", location.label)
+            addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+        }
+        
+        exitDropPinMode()
+        startActivity(intent)
+        Snackbar.make(binding.root, R.string.location_saved, Snackbar.LENGTH_SHORT).show()
     }
 
     private fun setupDateFilters() {
