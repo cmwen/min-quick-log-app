@@ -205,6 +205,10 @@ class EntriesOverviewViewModel(private val repository: QuickLogRepository) : Vie
         deleteEntries(_selectedEntryIds.value.toList(), onComplete)
     }
 
+    fun exportEntriesCsv(): String {
+        return repository.exportEntriesAsCsv(entriesFlow.value)
+    }
+
     class Factory(private val repository: QuickLogRepository) : ViewModelProvider.Factory {
         @Suppress("UNCHECKED_CAST")
         override fun <T : ViewModel> create(modelClass: Class<T>): T {

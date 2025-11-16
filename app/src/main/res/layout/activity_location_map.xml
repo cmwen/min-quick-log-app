@@ -46,6 +46,18 @@
             app:layout_constraintEnd_toEndOf="parent"
             tools:visibility="visible" />
 
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/addLocationFab"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="16dp"
+            android:src="@drawable/ic_location"
+            android:contentDescription="@string/add_location_pin"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/mapView"
+            app:layout_constraintBottom_toTopOf="@id/filterCard"
+            app:layout_constraintVertical_bias="0.1" />
+
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/filterCard"
             android:layout_width="0dp"

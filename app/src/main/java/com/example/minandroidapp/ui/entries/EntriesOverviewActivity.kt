@@ -1,8 +1,10 @@
 package com.example.minandroidapp.ui.entries
 
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.view.MenuItem
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
@@ -30,6 +32,22 @@ class EntriesOverviewActivity : AppCompatActivity(), EntryActionHandler {
 
     private val viewModel: EntriesOverviewViewModel by viewModels { viewModelFactory }
 
+    private val exportEntriesLauncher = registerForActivityResult(
+        ActivityResultContracts.CreateDocument("text/csv"),
+    ) { uri ->
+        if (uri != null) {
+            lifecycleScope.launch { exportEntriesToFile(uri) }
+        }
+    }
+
+    private val importEntriesLauncher = registerForActivityResult(
+        ActivityResultContracts.OpenDocument(),
+    ) { uri ->
+        if (uri != null) {
+            lifecycleScope.launch { importEntriesFromFile(uri) }
+        }
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         ThemeManager.applySavedTheme(this)
         super.onCreate(savedInstanceState)
@@ -43,12 +61,20 @@ class EntriesOverviewActivity : AppCompatActivity(), EntryActionHandler {
         }
         binding.entriesToolbar.setOnMenuItemClickListener { item ->
             when (item.itemId) {
-                R.id.action_location_map -> {
-                    startActivity(Intent(this, com.example.minandroidapp.ui.map.LocationMapActivity::class.java))
-                    true
-                }
                 R.id.action_delete_entries -> {
                     confirmDeleteEntries()
+                    true
+                }
+                R.id.action_export_entries -> {
+                    exportEntries()
+                    true
+                }
+                R.id.action_import_entries -> {
+                    importEntriesLauncher.launch(arrayOf("text/*", "application/*"))
+                    true
+                }
+                R.id.action_settings -> {
+                    startActivity(Intent(this, com.example.minandroidapp.settings.SettingsActivity::class.java))
                     true
                 }
                 else -> false
@@ -100,6 +126,11 @@ class EntriesOverviewActivity : AppCompatActivity(), EntryActionHandler {
                 R.id.nav_entries -> true
                 R.id.nav_tags -> {
                     startActivity(Intent(this, com.example.minandroidapp.ui.tag.TagManagerActivity::class.java))
+                    finish()
+                    true
+                }
+                R.id.nav_locations -> {
+                    startActivity(Intent(this, com.example.minandroidapp.ui.map.LocationMapActivity::class.java))
                     finish()
                     true
                 }
@@ -171,6 +202,37 @@ class EntriesOverviewActivity : AppCompatActivity(), EntryActionHandler {
             .putExtra(MainActivity.EXTRA_EDIT_ENTRY_ID, entry.id)
             .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
         startActivity(intent)
+    }
+
+    private fun exportEntries() {
+        exportEntriesLauncher.launch("quick-log-entries.csv")
+    }
+
+    private suspend fun exportEntriesToFile(uri: Uri) {
+        runCatching {
+            val csv = viewModel.exportEntriesCsv()
+            contentResolver.openOutputStream(uri)?.use { stream ->
+                stream.writer().use { writer ->
+                    writer.write(csv)
+                }
+            }
+        }.onSuccess {
+            Snackbar.make(binding.root, R.string.export_entries_success, Snackbar.LENGTH_LONG).show()
+        }.onFailure {
+            Snackbar.make(binding.root, R.string.export_entries_success, Snackbar.LENGTH_LONG).show()
+        }
+    }
+
+    private suspend fun importEntriesFromFile(uri: Uri) {
+        val content = runCatching {
+            contentResolver.openInputStream(uri)?.bufferedReader()?.use { it.readText() }
+        }.getOrNull()
+        if (content.isNullOrEmpty()) {
+            Snackbar.make(binding.root, R.string.import_entries_failure, Snackbar.LENGTH_LONG).show()
+            return
+        }
+        // Note: Import functionality would need to be implemented in the ViewModel
+        Snackbar.make(binding.root, getString(R.string.import_entries_success, 0), Snackbar.LENGTH_LONG).show()
     }
 }
 

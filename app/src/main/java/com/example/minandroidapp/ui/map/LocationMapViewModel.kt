@@ -37,16 +37,18 @@ class LocationMapViewModel(private val repository: QuickLogRepository) : ViewMod
                     entries
                 }
 
-                _locationEntries.value = filtered.map { entry: LogEntry ->
-                    LocationEntry(
-                        id = entry.id,
-                        createdAt = entry.createdAt,
-                        latitude = entry.location.latitude,
-                        longitude = entry.location.longitude,
-                        locationLabel = entry.location.label,
-                        tags = entry.tags.map { tag -> tag.label }
-                    )
-                }
+                _locationEntries.value = filtered
+                    .filter { entry -> entry.location.latitude != null && entry.location.longitude != null }
+                    .map { entry: LogEntry ->
+                        LocationEntry(
+                            id = entry.id,
+                            createdAt = entry.createdAt,
+                            latitude = entry.location.latitude,
+                            longitude = entry.location.longitude,
+                            locationLabel = entry.location.label,
+                            tags = entry.tags.map { tag -> tag.label }
+                        )
+                    }
             }
         }
     }

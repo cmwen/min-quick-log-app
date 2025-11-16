@@ -12,4 +12,8 @@
         android:id="@+id/nav_tags"
         android:icon="@drawable/ic_tab_tags"
         android:title="@string/manage_tags" />
+    <item
+        android:id="@+id/nav_locations"
+        android:icon="@drawable/ic_location"
+        android:title="@string/location_map" />
 </menu>
