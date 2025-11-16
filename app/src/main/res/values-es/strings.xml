@@ -121,4 +121,8 @@
     <string name="import_locations_success">Se importaron %1$d ubicaciones</string>
     <string name="import_locations_failure">No se pudieron importar las ubicaciones</string>
     <string name="export_locations_success">Ubicaciones exportadas</string>
+    <string name="copy_llm_prompt">Copiar prompt LLM</string>
+    <string name="copy_llm_prompt_done">Prompt copiado al portapapeles</string>
+    <string name="tag_llm_prompt">Analiza estas etiquetas de Quick Log en formato CSV. Mejora etiquetas, categorías y related_ids. Sugiere nuevas etiquetas si ayuda. Devuelve SOLO filas CSV con el esquema: id,label,category,related_ids (related_ids separados por |). Mantén los IDs existentes.</string>
+    <string name="location_llm_prompt">Recibirás entradas de ubicación de Quick Log en JSON (timestamp, latitud, longitud, nombre del lugar y etiquetas). Resume rutinas, detecta agrupaciones y genera una línea de tiempo concisa. Propón etiquetas/relaciones nuevas (devuélvelas en CSV: id,label,category,related_ids). Respuesta concisa.</string>
 </resources>
