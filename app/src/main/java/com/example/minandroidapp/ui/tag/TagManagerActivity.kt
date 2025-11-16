@@ -20,7 +20,7 @@ import com.example.minandroidapp.data.QuickLogRepository
 import com.example.minandroidapp.data.db.LogDatabase
 import com.example.minandroidapp.databinding.ActivityTagManagerBinding
 import com.example.minandroidapp.model.TagRelations
-import com.example.minandroidapp.ui.common.BaseNavigationActivity
+import androidx.appcompat.app.AppCompatActivity
 import com.example.minandroidapp.ui.common.SwipeToDeleteCallback
 import com.example.minandroidapp.settings.ThemeManager
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -28,9 +28,7 @@ import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.textfield.TextInputEditText
 import kotlinx.coroutines.launch
 
-class TagManagerActivity : BaseNavigationActivity() {
-
-    override val currentNavItem = R.id.nav_tags
+class TagManagerActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityTagManagerBinding
     private lateinit var adapter: TagRelationsAdapter
@@ -64,6 +62,7 @@ class TagManagerActivity : BaseNavigationActivity() {
         setContentView(binding.root)
 
         setSupportActionBar(binding.tagToolbar)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
         
         // Handle incoming shared data
         handleIncomingIntent(intent)
@@ -75,7 +74,7 @@ class TagManagerActivity : BaseNavigationActivity() {
         }
         binding.tagToolbar.setNavigationOnClickListener {
             if (!clearSelectionIfNeeded()) {
-                finish()
+                navigateBackToMain()
             }
         }
         binding.tagToolbar.inflateMenu(R.menu.menu_tag_manager)
@@ -134,7 +133,13 @@ class TagManagerActivity : BaseNavigationActivity() {
         binding.addTagFab.setOnClickListener {
             showCreateTagDialog()
         }
-        setupBottomNav(binding.bottomNav)
+    }
+
+    private fun navigateBackToMain() {
+        val intent = Intent(this, MainActivity::class.java)
+            .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP)
+        startActivity(intent)
+        finish()
     }
 
     private fun showEditDialog(relations: TagRelations) {

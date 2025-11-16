@@ -2,33 +2,33 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
-        android:id="@+id/action_delete_tags"
-        android:title="@string/delete_tags"
-        android:icon="@drawable/ic_delete"
-        android:orderInCategory="1"
-        app:showAsAction="never" />
-    <item
         android:id="@+id/action_export_tags"
         android:title="@string/export_tags"
         android:icon="@drawable/ic_export"
-        android:orderInCategory="2"
-        app:showAsAction="always" />
+        android:orderInCategory="1"
+        app:showAsAction="ifRoom" />
     <item
         android:id="@+id/action_import_tags"
         android:title="@string/import_tags"
         android:icon="@drawable/ic_import"
+        android:orderInCategory="2"
+        app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/action_delete_tags"
+        android:title="@string/delete_tags"
+        android:icon="@drawable/ic_delete"
         android:orderInCategory="3"
-        app:showAsAction="always" />
+        app:showAsAction="never" />
     <item
         android:id="@+id/action_copy_tag_prompt"
         android:title="@string/copy_llm_prompt"
         android:icon="@drawable/ic_copy"
         android:orderInCategory="4"
-        app:showAsAction="ifRoom" />
+        app:showAsAction="never" />
     <item
         android:id="@+id/action_settings"
         android:icon="@drawable/ic_settings"
         android:title="@string/settings"
         android:orderInCategory="5"
-        app:showAsAction="never" />
+        app:showAsAction="ifRoom" />
 </menu>

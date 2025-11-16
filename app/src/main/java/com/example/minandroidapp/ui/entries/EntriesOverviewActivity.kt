@@ -16,15 +16,13 @@ import com.example.minandroidapp.data.QuickLogRepository
 import com.example.minandroidapp.data.db.LogDatabase
 import com.example.minandroidapp.databinding.ActivityEntriesOverviewBinding
 import com.example.minandroidapp.settings.ThemeManager
-import com.example.minandroidapp.ui.common.BaseNavigationActivity
+import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.tabs.TabLayoutMediator
 import kotlinx.coroutines.launch
 
-class EntriesOverviewActivity : BaseNavigationActivity(), EntryActionHandler {
-
-    override val currentNavItem = R.id.nav_entries
+class EntriesOverviewActivity : AppCompatActivity(), EntryActionHandler {
 
     private lateinit var binding: ActivityEntriesOverviewBinding
     private var deleteMenuItem: MenuItem? = null
@@ -58,6 +56,7 @@ class EntriesOverviewActivity : BaseNavigationActivity(), EntryActionHandler {
         setContentView(binding.root)
 
         setSupportActionBar(binding.entriesToolbar)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
         binding.entriesToolbar.inflateMenu(R.menu.menu_entries_overview)
         deleteMenuItem = binding.entriesToolbar.menu.findItem(R.id.action_delete_entries)?.apply {
             isVisible = false
@@ -85,7 +84,7 @@ class EntriesOverviewActivity : BaseNavigationActivity(), EntryActionHandler {
         }
         binding.entriesToolbar.setNavigationOnClickListener {
             viewModel.clearEntrySelection()
-            finish()
+            navigateBackToMain()
         }
 
         val adapter = EntriesPagerAdapter(this)
@@ -113,8 +112,13 @@ class EntriesOverviewActivity : BaseNavigationActivity(), EntryActionHandler {
                 updateEntrySelectionUi(ids.size)
             }
         }
+    }
 
-        setupBottomNav(binding.bottomNav)
+    private fun navigateBackToMain() {
+        val intent = Intent(this, MainActivity::class.java)
+            .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP)
+        startActivity(intent)
+        finish()
     }
 
     private fun confirmDeleteEntries() {
