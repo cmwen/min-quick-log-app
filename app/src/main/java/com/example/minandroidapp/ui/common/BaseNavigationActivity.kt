@@ -56,42 +56,42 @@ abstract class BaseNavigationActivity : AppCompatActivity() {
 
     /**
      * Navigate to the record screen (MainActivity).
-     * Uses FLAG_ACTIVITY_CLEAR_TOP to prevent stack buildup.
+     * This should never be called since MainActivity is the only activity with bottom nav.
      */
     private fun navigateToRecord() {
-        if (currentNavItem != R.id.nav_record) {
-            startActivity(Intent(this, MainActivity::class.java).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP))
-            finish()
-        }
+        // No-op: MainActivity is already the current screen
     }
 
     /**
      * Navigate to the entries overview screen.
+     * Opens as a new screen with back navigation to MainActivity.
      */
     private fun navigateToEntries() {
         if (currentNavItem != R.id.nav_entries) {
-            startActivity(Intent(this, EntriesOverviewActivity::class.java))
-            finish()
+            val intent = Intent(this, EntriesOverviewActivity::class.java)
+            startActivity(intent)
         }
     }
 
     /**
      * Navigate to the tag manager screen.
+     * Opens as a new screen with back navigation to MainActivity.
      */
     private fun navigateToTags() {
         if (currentNavItem != R.id.nav_tags) {
-            startActivity(Intent(this, TagManagerActivity::class.java))
-            finish()
+            val intent = Intent(this, TagManagerActivity::class.java)
+            startActivity(intent)
         }
     }
 
     /**
      * Navigate to the location map screen.
+     * Opens as a new screen with back navigation to MainActivity.
      */
     private fun navigateToLocations() {
         if (currentNavItem != R.id.nav_locations) {
-            startActivity(Intent(this, LocationMapActivity::class.java))
-            finish()
+            val intent = Intent(this, LocationMapActivity::class.java)
+            startActivity(intent)
         }
     }
 }
