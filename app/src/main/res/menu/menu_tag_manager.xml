@@ -17,10 +17,16 @@
         android:id="@+id/action_import_tags"
         android:title="@string/import_tags"
         android:orderInCategory="3"
-        app:showAsAction="never" />
+        app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/action_settings"
+        android:icon="@drawable/ic_settings"
+        android:title="@string/settings"
+        android:orderInCategory="4"
+        app:showAsAction="ifRoom" />
     <item
         android:id="@+id/action_help_export_import"
         android:title="@string/help_export_import"
-        android:orderInCategory="4"
+        android:orderInCategory="5"
         app:showAsAction="never" />
 </menu>

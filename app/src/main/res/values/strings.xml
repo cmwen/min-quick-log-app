@@ -56,6 +56,16 @@
     <string name="import_tags_success">Imported %1$d tags</string>
     <string name="import_tags_failure">Unable to import tags</string>
     <string name="export_tags_success">Tags exported</string>
+    <string name="import_entries">Import entries (CSV)</string>
+    <string name="export_entries">Export entries</string>
+    <string name="import_entries_success">Imported %1$d entries</string>
+    <string name="import_entries_failure">Unable to import entries</string>
+    <string name="export_entries_success">Entries exported</string>
+    <string name="import_locations">Import locations (CSV/JSON)</string>
+    <string name="export_locations">Export locations</string>
+    <string name="import_locations_success">Imported %1$d locations</string>
+    <string name="import_locations_failure">Unable to import locations</string>
+    <string name="export_locations_success">Locations exported</string>
     <string name="delete_tags">Delete tags</string>
     <string name="delete_tags_message">Select tags to delete</string>
     <string name="delete_tags_confirm_message">Delete %1$d selected tags? Entries keep their history but these tags disappear from suggestions.</string>

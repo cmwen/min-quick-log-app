@@ -92,6 +92,10 @@ class TagManagerActivity : AppCompatActivity() {
                     confirmDeleteSelection()
                     true
                 }
+                R.id.action_settings -> {
+                    startActivity(Intent(this, com.example.minandroidapp.settings.SettingsActivity::class.java))
+                    true
+                }
                 R.id.action_help_export_import -> {
                     showHelpDialog()
                     true
@@ -413,6 +417,11 @@ class TagManagerActivity : AppCompatActivity() {
                     true
                 }
                 R.id.nav_tags -> true
+                R.id.nav_locations -> {
+                    startActivity(Intent(this, com.example.minandroidapp.ui.map.LocationMapActivity::class.java))
+                    finish()
+                    true
+                }
                 else -> false
             }
         }

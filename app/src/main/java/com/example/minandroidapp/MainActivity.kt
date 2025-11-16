@@ -114,6 +114,11 @@ class MainActivity : AppCompatActivity() {
                     binding.bottomNav.selectedItemId = R.id.nav_record
                     false
                 }
+                R.id.nav_locations -> {
+                    openLocationMap()
+                    binding.bottomNav.selectedItemId = R.id.nav_record
+                    false
+                }
                 else -> false
             }
         }

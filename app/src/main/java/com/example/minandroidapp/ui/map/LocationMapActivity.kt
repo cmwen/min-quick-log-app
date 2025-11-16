@@ -206,7 +206,7 @@ class LocationMapActivity : AppCompatActivity() {
     }
 
     private fun setupBottomNav() {
-        binding.bottomNav.selectedItemId = R.id.nav_entries
+        binding.bottomNav.selectedItemId = R.id.nav_locations
         binding.bottomNav.setOnItemSelectedListener { item ->
             when (item.itemId) {
                 R.id.nav_record -> {
@@ -214,12 +214,17 @@ class LocationMapActivity : AppCompatActivity() {
                     finish()
                     true
                 }
-                R.id.nav_entries -> true
+                R.id.nav_entries -> {
+                    startActivity(Intent(this, com.example.minandroidapp.ui.entries.EntriesOverviewActivity::class.java))
+                    finish()
+                    true
+                }
                 R.id.nav_tags -> {
                     startActivity(Intent(this, com.example.minandroidapp.ui.tag.TagManagerActivity::class.java))
                     finish()
                     true
                 }
+                R.id.nav_locations -> true
                 else -> false
             }
         }
@@ -232,6 +237,19 @@ class LocationMapActivity : AppCompatActivity() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
+            R.id.action_export_locations -> {
+                exportLocationDataAsJson()
+                true
+            }
+            R.id.action_import_locations -> {
+                // TODO: Implement import functionality
+                Snackbar.make(binding.root, "Import locations feature coming soon", Snackbar.LENGTH_LONG).show()
+                true
+            }
+            R.id.action_settings -> {
+                startActivity(Intent(this, com.example.minandroidapp.settings.SettingsActivity::class.java))
+                true
+            }
             R.id.action_export_json -> {
                 exportLocationDataAsJson()
                 true
