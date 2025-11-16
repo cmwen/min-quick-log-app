@@ -16,6 +16,7 @@ This repository includes machine-readable and human-readable context to help AI 
 - `docs/UI_PATTERNS.md` — UI component guidelines and consistency standards.
 - `docs/FEATURE_DEVELOPMENT.md` — step-by-step guide for adding new features.
 - `docs/secrets-management.md` — secrets handling policy and GitHub App integration notes.
+- `docs/RELEASE_GUIDE.md` — guide for creating production, beta, and prerelease versions.
 
 ## Included Agents
 
