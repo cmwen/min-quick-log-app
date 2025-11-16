@@ -10,7 +10,6 @@ import android.view.Menu
 import android.view.MenuItem
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.lifecycle.lifecycleScope
 import com.example.minandroidapp.MainActivity
@@ -20,6 +19,7 @@ import com.example.minandroidapp.data.db.LogDatabase
 import com.example.minandroidapp.databinding.ActivityLocationMapBinding
 import com.example.minandroidapp.model.EntryLocation
 import com.example.minandroidapp.settings.ThemeManager
+import com.example.minandroidapp.ui.common.BaseNavigationActivity
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
@@ -35,7 +35,9 @@ import java.time.LocalDate
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 
-class LocationMapActivity : AppCompatActivity() {
+class LocationMapActivity : BaseNavigationActivity() {
+
+    override val currentNavItem = R.id.nav_locations
 
     private lateinit var binding: ActivityLocationMapBinding
     private val viewModel: LocationMapViewModel by viewModels {
@@ -73,7 +75,7 @@ class LocationMapActivity : AppCompatActivity() {
         setupDateFilters()
         setupAddLocationFab()
         bindViewModel()
-        setupBottomNav()
+        setupBottomNav(binding.bottomNav)
     }
 
     private fun setupMap() {
@@ -344,31 +346,6 @@ class LocationMapActivity : AppCompatActivity() {
             putExtra(Intent.EXTRA_SUBJECT, getString(R.string.map_timeline_title))
         }
         startActivity(Intent.createChooser(shareIntent, getString(R.string.share_entry)))
-    }
-
-    private fun setupBottomNav() {
-        binding.bottomNav.selectedItemId = R.id.nav_locations
-        binding.bottomNav.setOnItemSelectedListener { item ->
-            when (item.itemId) {
-                R.id.nav_record -> {
-                    startActivity(Intent(this, MainActivity::class.java).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP))
-                    finish()
-                    true
-                }
-                R.id.nav_entries -> {
-                    startActivity(Intent(this, com.example.minandroidapp.ui.entries.EntriesOverviewActivity::class.java))
-                    finish()
-                    true
-                }
-                R.id.nav_tags -> {
-                    startActivity(Intent(this, com.example.minandroidapp.ui.tag.TagManagerActivity::class.java))
-                    finish()
-                    true
-                }
-                R.id.nav_locations -> true
-                else -> false
-            }
-        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {

@@ -6,7 +6,7 @@ import android.os.Bundle
 import android.view.MenuItem
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
-import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.lifecycleScope
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import androidx.viewpager2.widget.ViewPager2
@@ -16,12 +16,15 @@ import com.example.minandroidapp.data.QuickLogRepository
 import com.example.minandroidapp.data.db.LogDatabase
 import com.example.minandroidapp.databinding.ActivityEntriesOverviewBinding
 import com.example.minandroidapp.settings.ThemeManager
+import com.example.minandroidapp.ui.common.BaseNavigationActivity
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.tabs.TabLayoutMediator
 import kotlinx.coroutines.launch
 
-class EntriesOverviewActivity : AppCompatActivity(), EntryActionHandler {
+class EntriesOverviewActivity : BaseNavigationActivity(), EntryActionHandler {
+
+    override val currentNavItem = R.id.nav_entries
 
     private lateinit var binding: ActivityEntriesOverviewBinding
     private var deleteMenuItem: MenuItem? = null
@@ -111,32 +114,7 @@ class EntriesOverviewActivity : AppCompatActivity(), EntryActionHandler {
             }
         }
 
-        setupBottomNav()
-    }
-
-    private fun setupBottomNav() {
-        binding.bottomNav.selectedItemId = R.id.nav_entries
-        binding.bottomNav.setOnItemSelectedListener { item ->
-            when (item.itemId) {
-                R.id.nav_record -> {
-                    startActivity(Intent(this, MainActivity::class.java).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP))
-                    finish()
-                    true
-                }
-                R.id.nav_entries -> true
-                R.id.nav_tags -> {
-                    startActivity(Intent(this, com.example.minandroidapp.ui.tag.TagManagerActivity::class.java))
-                    finish()
-                    true
-                }
-                R.id.nav_locations -> {
-                    startActivity(Intent(this, com.example.minandroidapp.ui.map.LocationMapActivity::class.java))
-                    finish()
-                    true
-                }
-                else -> false
-            }
-        }
+        setupBottomNav(binding.bottomNav)
     }
 
     private fun confirmDeleteEntries() {
@@ -174,7 +152,7 @@ class EntriesOverviewActivity : AppCompatActivity(), EntryActionHandler {
     }
 
     private class EntriesPagerAdapter(
-        activity: AppCompatActivity,
+        activity: FragmentActivity,
     ) : FragmentStateAdapter(activity) {
 
         override fun getItemCount(): Int = 4
