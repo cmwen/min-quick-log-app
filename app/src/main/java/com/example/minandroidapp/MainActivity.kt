@@ -79,7 +79,7 @@ class MainActivity : AppCompatActivity() {
 
         maybeFetchLocationOnStart()
         handleEditIntent(intent)
-ai        handleLocationIntent(intent)
+        handleLocationIntent(intent)
     }
 
     private fun setupInputs() {

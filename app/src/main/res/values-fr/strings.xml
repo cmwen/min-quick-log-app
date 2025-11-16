@@ -56,6 +56,11 @@
     <string name="import_tags_success">%1$d étiquettes importées</string>
     <string name="import_tags_failure">Impossible d’importer les étiquettes</string>
     <string name="export_tags_success">Étiquettes exportées</string>
+    <string name="import_entries">Importer des entrées (CSV)</string>
+    <string name="export_entries">Exporter des entrées</string>
+    <string name="import_entries_success">%1$d entrées importées</string>
+    <string name="import_entries_failure">Impossible d’importer les entrées</string>
+    <string name="export_entries_success">Entrées exportées</string>
     <string name="delete_tags">Supprimer des étiquettes</string>
     <string name="delete_tags_message">Sélectionnez les étiquettes à supprimer</string>
     <string name="delete_tags_confirm_message">Supprimer %1$d étiquettes sélectionnées ? Les entrées conserveront leur historique mais ces étiquettes disparaîtront des suggestions.</string>
@@ -105,4 +110,15 @@
     <string name="export_location_json">Exporter en JSON (compatible LLM)</string>
     <string name="export_location_csv">Exporter en CSV</string>
     <string name="location_map">Carte de Localisation</string>
+    <string name="add_location_pin">Ajouter une épingle</string>
+    <string name="drop_pin_mode">Touchez la carte pour déposer une punaise</string>
+    <string name="pin_dropped">Épingle déposée. Touchez pour enregistrer l’emplacement.</string>
+    <string name="save_location">Enregistrer l’emplacement</string>
+    <string name="cancel">Annuler</string>
+    <string name="location_saved">Emplacement enregistré</string>
+    <string name="import_locations">Importer des emplacements (CSV/JSON)</string>
+    <string name="export_locations">Exporter des emplacements</string>
+    <string name="import_locations_success">%1$d emplacements importés</string>
+    <string name="import_locations_failure">Impossible d’importer les emplacements</string>
+    <string name="export_locations_success">Emplacements exportés</string>
 </resources>

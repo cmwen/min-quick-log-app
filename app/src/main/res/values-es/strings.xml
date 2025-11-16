@@ -56,6 +56,11 @@
     <string name="import_tags_success">Se importaron %1$d etiquetas</string>
     <string name="import_tags_failure">No se pudieron importar las etiquetas</string>
     <string name="export_tags_success">Etiquetas exportadas</string>
+    <string name="import_entries">Importar entradas (CSV)</string>
+    <string name="export_entries">Exportar entradas</string>
+    <string name="import_entries_success">Se importaron %1$d entradas</string>
+    <string name="import_entries_failure">No se pudieron importar las entradas</string>
+    <string name="export_entries_success">Entradas exportadas</string>
     <string name="delete_tags">Eliminar etiquetas</string>
     <string name="delete_tags_message">Selecciona las etiquetas a eliminar</string>
     <string name="delete_tags_confirm_message">¿Eliminar %1$d etiquetas seleccionadas? Las entradas conservarán su historial, pero estas etiquetas desaparecerán de las sugerencias.</string>
@@ -105,4 +110,15 @@
     <string name="export_location_json">Exportar como JSON (compatible con LLM)</string>
     <string name="export_location_csv">Exportar como CSV</string>
     <string name="location_map">Mapa de Ubicaciones</string>
+    <string name="add_location_pin">Agregar marcador de ubicación</string>
+    <string name="drop_pin_mode">Toque el mapa para soltar un pin</string>
+    <string name="pin_dropped">Pin soltado. Toque para guardar la ubicación.</string>
+    <string name="save_location">Guardar ubicación</string>
+    <string name="cancel">Cancelar</string>
+    <string name="location_saved">Ubicación guardada</string>
+    <string name="import_locations">Importar ubicaciones (CSV/JSON)</string>
+    <string name="export_locations">Exportar ubicaciones</string>
+    <string name="import_locations_success">Se importaron %1$d ubicaciones</string>
+    <string name="import_locations_failure">No se pudieron importar las ubicaciones</string>
+    <string name="export_locations_success">Ubicaciones exportadas</string>
 </resources>
