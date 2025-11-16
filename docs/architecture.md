@@ -1,13 +1,15 @@
 # Architecture Overview
 
-This template provides a modular foundation for Android projects that integrate AI-driven features. The initial setup intentionally keeps the implementation lightweight while documenting the extension points for production systems.
+**Note:** This file provides a high-level overview. For detailed architecture documentation, see [ARCHITECTURE.md](ARCHITECTURE.md).
+
+Quick Log is a tag-first Android application built with modern Android architecture components following the MVVM pattern.
 
 ## Modules
 
-- **app** — Primary Android application module that produces the `debug` and `release` build variants. It is configured for Android 14 (API level 34) with Kotlin, uses modern build tooling, and demonstrates dependency injection and AI-aware configuration hooks.
-- **agent assets** — The `agents/` directory contains machine-readable context that can be consumed by AI assistants or tooling to understand the project's purpose, coding conventions, and security posture.
+- **app** — Single Android application module that produces the `debug` and `release` build variants. Configured for Android 14 (API level 34, minSdk 24) with Kotlin 1.9+.
+- **agent assets** — The `agents/` directory contains machine-readable context for AI assistants including project goals, coding conventions, and architecture guidelines.
 
-Additional modules (e.g., `core`, `feature-*`, `data`) can be added as needed. Update `settings.gradle.kts` and add module-specific `build.gradle.kts` files to extend the template.
+The app currently uses a single module structure. Feature modules may be considered in the future for better separation and build performance.
 
 ## Key Technologies
 
@@ -53,3 +55,14 @@ Additional modules (e.g., `core`, `feature-*`, `data`) can be added as needed. U
 - Configure feature modules, DI framework (e.g., Hilt), and data layer based on project needs.
 - Integrate concrete AI services (OpenAI, Vertex AI, Azure OpenAI) using secrets managed through GitHub.
 - Update documentation as the architecture evolves to keep the agent context synchronized.
+
+## Additional Documentation
+
+For comprehensive architecture details and development guidelines, see:
+
+- **[ARCHITECTURE.md](ARCHITECTURE.md)** - Detailed architecture documentation with actual implementation patterns
+- **[UI_PATTERNS.md](UI_PATTERNS.md)** - UI component guidelines and consistency standards
+- **[CODING_GUIDELINES.md](CODING_GUIDELINES.md)** - Kotlin coding standards and best practices
+- **[FEATURE_DEVELOPMENT.md](FEATURE_DEVELOPMENT.md)** - Step-by-step guide for adding new features
+
+These documents provide the accurate, current information about the codebase structure and development standards.
