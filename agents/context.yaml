@@ -27,9 +27,9 @@ references:
   architecture: docs/ARCHITECTURE.md
   coding_guidelines: docs/CODING_GUIDELINES.md
   ui_patterns: docs/UI_PATTERNS.md
-  agents_context_guide: docs/agents-context.md
+  feature_development: docs/FEATURE_DEVELOPMENT.md
   secrets: docs/secrets-management.md
-  feature_structure: docs/FEATURE_DEVELOPMENT.md
+  refactoring_plan: REFACTORING_ANALYSIS.md
 agents_catalog:
   - id: android-builder
     goal: Keep builds green, manage Gradle updates, and enforce lint/test gates.
@@ -42,5 +42,4 @@ agents_catalog:
   - id: release-shepherd
     goal: Prepare version metadata, validate signing configuration, and operate release workflows.
     entry_prompts:
-      - docs/template-usage.md
       - docs/secrets-management.md

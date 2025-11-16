@@ -22,6 +22,7 @@ Use the snippets below to prime AI coding assistants when working on this projec
 
 ## Documentation
 
-- Update `docs/agents-context.md` and relevant README sections when introducing new AI capabilities.
+- Update `agents/context.yaml`, `docs/ARCHITECTURE.md`, and relevant README sections when introducing new capabilities.
 - Note any new GitHub secrets or infrastructure requirements in `docs/secrets-management.md`.
+- Follow `docs/FEATURE_DEVELOPMENT.md` guide when adding new features.
 - Provide reproducible steps for demoing AI-powered features.

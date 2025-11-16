@@ -11,9 +11,10 @@ This repository includes machine-readable and human-readable context to help AI 
 ## Source of Truth
 
 - `agents/context.yaml` — canonical goals, non-goals, and security constraints.
-- `docs/agents-context.md` — how to keep the agent context current.
-- `docs/architecture.md` — architecture overview and planned extension points.
-- `docs/template-usage.md` — workflow for local development, CI, and releases.
+- `docs/ARCHITECTURE.md` — comprehensive architecture documentation with actual implementation patterns.
+- `docs/CODING_GUIDELINES.md` — Kotlin coding standards and best practices.
+- `docs/UI_PATTERNS.md` — UI component guidelines and consistency standards.
+- `docs/FEATURE_DEVELOPMENT.md` — step-by-step guide for adding new features.
 - `docs/secrets-management.md` — secrets handling policy and GitHub App integration notes.
 
 ## Included Agents

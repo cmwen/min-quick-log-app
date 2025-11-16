@@ -678,7 +678,7 @@ class MyFeatureViewModelTest {
 #### Update README.md
 Add feature to the key capabilities section.
 
-#### Update docs/architecture.md
+#### Update docs/ARCHITECTURE.md
 Add your new components to the architecture overview.
 
 ## Common Patterns for Different Feature Types

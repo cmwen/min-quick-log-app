@@ -37,4 +37,4 @@ docs/                    # Extended documentation (architecture, workflows)
 scripts/                 # Hooks for automation and tooling
 ```
 
-See `docs/architecture.md` for module-level decisions and `docs/template-usage.md` for CI/CD and release workflows. Keep documentation and automation updated as the product evolves.
+See `docs/ARCHITECTURE.md` for comprehensive architecture documentation and `REFACTORING_ANALYSIS.md` for analysis and improvement roadmap. Keep documentation and automation updated as the product evolves.

@@ -50,14 +50,14 @@ meta:
 
 #### Problem: Architecture Documentation Mismatch
 
-The `docs/architecture.md` described a template rather than the actual implementation:
+The old `docs/architecture.md` described a template rather than the actual implementation:
 - Mentioned features not implemented
 - Didn't document actual patterns used
 - No mention of 4000+ lines of actual code
 
 **Impact**: LLMs can't understand the existing structure to extend it properly.
 
-**Solution**: ✅ Created comprehensive `docs/ARCHITECTURE.md` with actual details.
+**Solution**: ✅ Created comprehensive `docs/ARCHITECTURE.md` with actual details and removed the outdated template-focused file.
 
 ### 2. UI Consistency Issues
 
