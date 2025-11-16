@@ -10,7 +10,6 @@ import android.view.MenuItem
 import android.widget.ArrayAdapter
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.core.widget.doOnTextChanged
@@ -26,8 +25,7 @@ import com.example.minandroidapp.model.QuickLogEvent
 import com.example.minandroidapp.settings.SettingsActivity
 import com.example.minandroidapp.settings.ThemeManager
 import com.example.minandroidapp.ui.QuickLogViewModel
-import com.example.minandroidapp.ui.entries.EntriesOverviewActivity
-import com.example.minandroidapp.ui.tag.TagManagerActivity
+import com.example.minandroidapp.ui.common.BaseNavigationActivity
 import com.google.android.material.chip.Chip
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
@@ -37,7 +35,9 @@ import java.time.format.DateTimeFormatter
 import java.util.Locale
 import kotlinx.coroutines.launch
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : BaseNavigationActivity() {
+
+    override val currentNavItem = R.id.nav_record
 
     private lateinit var binding: ActivityMainBinding
     private lateinit var locationProvider: LocationProvider
@@ -73,7 +73,7 @@ class MainActivity : AppCompatActivity() {
         locationProvider = LocationProvider(this)
 
         setupInputs()
-        setupBottomNav()
+        setupBottomNav(binding.bottomNav)
         setupTagSearch()
         bindViewModel()
 
@@ -99,31 +99,6 @@ class MainActivity : AppCompatActivity() {
             if (suppressNoteUpdates) return@doOnTextChanged
             viewModel.setNote(text?.toString().orEmpty())
         }
-    }
-
-    private fun setupBottomNav() {
-        binding.bottomNav.setOnItemSelectedListener { item ->
-            when (item.itemId) {
-                R.id.nav_record -> true
-                R.id.nav_entries -> {
-                    openEntriesOverview()
-                    binding.bottomNav.selectedItemId = R.id.nav_record
-                    false
-                }
-                R.id.nav_tags -> {
-                    openTagManager()
-                    binding.bottomNav.selectedItemId = R.id.nav_record
-                    false
-                }
-                R.id.nav_locations -> {
-                    openLocationMap()
-                    binding.bottomNav.selectedItemId = R.id.nav_record
-                    false
-                }
-                else -> false
-            }
-        }
-        binding.bottomNav.selectedItemId = R.id.nav_record
     }
 
     private fun setupTagSearch() {
@@ -356,18 +331,6 @@ class MainActivity : AppCompatActivity() {
             putExtra(Intent.EXTRA_SUBJECT, "quick-log.csv")
         }
         startActivity(Intent.createChooser(shareIntent, getString(R.string.export_csv)))
-    }
-
-    private fun openTagManager() {
-        startActivity(Intent(this, TagManagerActivity::class.java))
-    }
-
-    private fun openLocationMap() {
-        startActivity(Intent(this, com.example.minandroidapp.ui.map.LocationMapActivity::class.java))
-    }
-
-    private fun openEntriesOverview() {
-        startActivity(Intent(this, EntriesOverviewActivity::class.java))
     }
 
     private fun showAboutDialog() {
