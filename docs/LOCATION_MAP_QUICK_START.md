@@ -97,7 +97,7 @@ Quick Log now includes a Location Map feature that lets you visualize your logge
 
 - Full documentation: `docs/location-map-feature.md`
 - LLM integration examples: `docs/llm-integration-example.md`
-- Architecture details: `docs/architecture.md`
+- Architecture details: `docs/ARCHITECTURE.md`
 
 ## Supported Languages
 

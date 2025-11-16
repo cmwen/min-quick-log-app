@@ -1,23 +1,35 @@
 meta:
-  project_name: AI-Aware Android Template
-  owner: YOUR_ORG_or_TEAM
-  last_updated: 2024-06-13
+  project_name: Quick Log - Lightweight Android Logger
+  owner: cmwen
+  last_updated: 2024-11-16
 goals:
-  - Provide a secure, modern starting point for Android apps that consume AI services.
-  - Document conventions so automated tooling and contributors share the same context.
-  - Automate quality gates, releases, and dependency hygiene through GitHub Actions.
+  - Provide a frictionless tag-based logging experience for capturing life moments
+  - Support location-aware entries with smart tag suggestions
+  - Enable easy export to Logseq and other knowledge bases
+  - Visualize location history on interactive maps
+  - Maintain clean, maintainable code for easy feature additions
+  - Support LLM-friendly data export formats
 non_goals:
-  - Shipping production-ready AI models or API integrations.
-  - Managing Play Store uploads; integrate separately as needed.
-  - Maintaining legacy Android API levels below 24.
+  - Cloud sync or backend services
+  - Social sharing or collaborative features
+  - Complex analytics or reporting beyond basic stats
+  - Support for Android API levels below 24
 guardrails:
   - Never commit API keys, tokens, or keystore files.
   - Validate AI-generated code with tests and human review before merging.
   - Ensure user data is collected and stored in compliance with privacy policies.
+  - Maintain UI consistency across all activities (see docs/UI_PATTERNS.md)
+  - Follow established architecture patterns (see docs/ARCHITECTURE.md)
+  - Keep activities under 400 lines - extract logic to ViewModels/Use Cases
+  - Use dependency injection for testability
+  - All new features must include documentation updates
 references:
-  architecture: docs/architecture.md
-  agents_context_guide: docs/agents-context.md
+  architecture: docs/ARCHITECTURE.md
+  coding_guidelines: docs/CODING_GUIDELINES.md
+  ui_patterns: docs/UI_PATTERNS.md
+  feature_development: docs/FEATURE_DEVELOPMENT.md
   secrets: docs/secrets-management.md
+  refactoring_plan: REFACTORING_ANALYSIS.md
 agents_catalog:
   - id: android-builder
     goal: Keep builds green, manage Gradle updates, and enforce lint/test gates.
@@ -30,5 +42,4 @@ agents_catalog:
   - id: release-shepherd
     goal: Prepare version metadata, validate signing configuration, and operate release workflows.
     entry_prompts:
-      - docs/template-usage.md
       - docs/secrets-management.md
