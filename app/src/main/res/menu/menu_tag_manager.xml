@@ -12,21 +12,17 @@
         android:title="@string/export_tags"
         android:icon="@drawable/ic_export"
         android:orderInCategory="2"
-        app:showAsAction="ifRoom" />
+        app:showAsAction="always" />
     <item
         android:id="@+id/action_import_tags"
         android:title="@string/import_tags"
+        android:icon="@drawable/ic_import"
         android:orderInCategory="3"
-        app:showAsAction="ifRoom" />
+        app:showAsAction="always" />
     <item
         android:id="@+id/action_settings"
         android:icon="@drawable/ic_settings"
         android:title="@string/settings"
         android:orderInCategory="4"
-        app:showAsAction="ifRoom" />
-    <item
-        android:id="@+id/action_help_export_import"
-        android:title="@string/help_export_import"
-        android:orderInCategory="5"
         app:showAsAction="never" />
 </menu>

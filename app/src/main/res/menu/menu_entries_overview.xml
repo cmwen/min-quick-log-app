@@ -10,14 +10,15 @@
         android:id="@+id/action_export_entries"
         android:title="@string/export_log"
         android:icon="@drawable/ic_export"
-        app:showAsAction="ifRoom" />
+        app:showAsAction="always" />
     <item
         android:id="@+id/action_import_entries"
         android:title="@string/import_entries"
-        app:showAsAction="never" />
+        android:icon="@drawable/ic_import"
+        app:showAsAction="always" />
     <item
         android:id="@+id/action_settings"
         android:icon="@drawable/ic_settings"
         android:title="@string/settings"
-        app:showAsAction="ifRoom" />
+        app:showAsAction="never" />
 </menu>

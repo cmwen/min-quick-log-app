@@ -73,7 +73,11 @@ class LocationMapActivity : AppCompatActivity() {
         val defaultLocation = GeoPoint(37.7749, -122.4194) // San Francisco as default
         binding.mapView.controller.setCenter(defaultLocation)
 
-        // Add map events overlay for tap handling
+        // Add map events overlay for drop pin functionality
+        setupMapTapListener()
+    }
+
+    private fun setupMapTapListener() {
         val mapEventsOverlay = MapEventsOverlay(object : MapEventsReceiver {
             override fun singleTapConfirmedHelper(p: GeoPoint?): Boolean {
                 if (dropPinMode && p != null) {
@@ -224,9 +228,20 @@ class LocationMapActivity : AppCompatActivity() {
     }
 
     private fun updateMapMarkers(entries: List<LocationEntry>) {
+        // Clear all markers but preserve the map events overlay (first overlay)
+        val mapEventsOverlay = binding.mapView.overlays.firstOrNull()
         binding.mapView.overlays.clear()
+        if (mapEventsOverlay != null) {
+            binding.mapView.overlays.add(mapEventsOverlay)
+        }
+        
+        // Add temp marker back if it exists
+        tempMarker?.let {
+            binding.mapView.overlays.add(it)
+        }
         
         if (entries.isEmpty()) {
+            binding.mapView.invalidate()
             return
         }
         
@@ -351,59 +366,12 @@ class LocationMapActivity : AppCompatActivity() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
-            R.id.action_export_locations -> {
-                exportLocationDataAsJson()
-                true
-            }
-            R.id.action_import_locations -> {
-                // TODO: Implement import functionality
-                Snackbar.make(binding.root, "Import locations feature coming soon", Snackbar.LENGTH_LONG).show()
-                true
-            }
             R.id.action_settings -> {
                 startActivity(Intent(this, com.example.minandroidapp.settings.SettingsActivity::class.java))
                 true
             }
-            R.id.action_export_json -> {
-                exportLocationDataAsJson()
-                true
-            }
-            R.id.action_export_csv -> {
-                exportLocationDataAsCsv()
-                true
-            }
             else -> super.onOptionsItemSelected(item)
         }
-    }
-
-    private fun exportLocationDataAsJson() {
-        val json = viewModel.exportEntriesAsJson()
-        if (json.isBlank()) {
-            Snackbar.make(binding.root, R.string.no_entries_message, Snackbar.LENGTH_LONG).show()
-            return
-        }
-        
-        val shareIntent = Intent(Intent.ACTION_SEND).apply {
-            type = "application/json"
-            putExtra(Intent.EXTRA_TEXT, json)
-            putExtra(Intent.EXTRA_SUBJECT, "location-data.json")
-        }
-        startActivity(Intent.createChooser(shareIntent, getString(R.string.export_location_data)))
-    }
-
-    private fun exportLocationDataAsCsv() {
-        val csv = viewModel.exportEntriesAsCsv()
-        if (csv.isBlank()) {
-            Snackbar.make(binding.root, R.string.no_entries_message, Snackbar.LENGTH_LONG).show()
-            return
-        }
-        
-        val shareIntent = Intent(Intent.ACTION_SEND).apply {
-            type = "text/csv"
-            putExtra(Intent.EXTRA_TEXT, csv)
-            putExtra(Intent.EXTRA_SUBJECT, "location-data.csv")
-        }
-        startActivity(Intent.createChooser(shareIntent, getString(R.string.export_location_data)))
     }
 
     override fun onResume() {

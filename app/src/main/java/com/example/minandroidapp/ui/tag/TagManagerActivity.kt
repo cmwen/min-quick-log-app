@@ -96,10 +96,6 @@ class TagManagerActivity : AppCompatActivity() {
                     startActivity(Intent(this, com.example.minandroidapp.settings.SettingsActivity::class.java))
                     true
                 }
-                R.id.action_help_export_import -> {
-                    showHelpDialog()
-                    true
-                }
                 else -> false
             }
         }
@@ -178,17 +174,6 @@ class TagManagerActivity : AppCompatActivity() {
         input?.post {
             input.requestFocus()
         }
-    }
-
-    private fun showHelpDialog() {
-        MaterialAlertDialogBuilder(this)
-            .setTitle(R.string.help_export_import_title)
-            .setMessage(android.text.Html.fromHtml(
-                getString(R.string.help_export_import_message),
-                android.text.Html.FROM_HTML_MODE_LEGACY
-            ))
-            .setPositiveButton(android.R.string.ok, null)
-            .show()
     }
 
     override fun onNewIntent(intent: Intent) {
