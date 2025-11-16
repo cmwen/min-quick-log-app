@@ -19,7 +19,7 @@ import com.example.minandroidapp.data.db.LogDatabase
 import com.example.minandroidapp.databinding.ActivityLocationMapBinding
 import com.example.minandroidapp.model.EntryLocation
 import com.example.minandroidapp.settings.ThemeManager
-import com.example.minandroidapp.ui.common.BaseNavigationActivity
+import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
@@ -35,9 +35,7 @@ import java.time.LocalDate
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 
-class LocationMapActivity : BaseNavigationActivity() {
-
-    override val currentNavItem = R.id.nav_locations
+class LocationMapActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityLocationMapBinding
     private val viewModel: LocationMapViewModel by viewModels {
@@ -68,14 +66,20 @@ class LocationMapActivity : BaseNavigationActivity() {
         setSupportActionBar(binding.mapToolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         binding.mapToolbar.setNavigationOnClickListener {
-            finish()
+            navigateBackToMain()
         }
 
         setupMap()
         setupDateFilters()
         setupAddLocationFab()
         bindViewModel()
-        setupBottomNav(binding.bottomNav)
+    }
+
+    private fun navigateBackToMain() {
+        val intent = Intent(this, MainActivity::class.java)
+            .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP)
+        startActivity(intent)
+        finish()
     }
 
     private fun setupMap() {
