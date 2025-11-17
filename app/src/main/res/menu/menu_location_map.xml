@@ -3,25 +3,25 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
-        android:id="@+id/action_export_location_json"
-        android:title="@string/export_location_json"
-        android:icon="@drawable/ic_export"
-        android:orderInCategory="1"
-        app:showAsAction="ifRoom" />
-
-    <item
         android:id="@+id/action_export_location_csv"
         android:title="@string/export_location_csv"
-        android:icon="@drawable/ic_export_csv"
-        android:orderInCategory="2"
+        android:icon="@drawable/ic_export"
+        android:orderInCategory="1"
         app:showAsAction="ifRoom" />
 
     <item
         android:id="@+id/action_import_locations"
         android:title="@string/import_locations"
         android:icon="@drawable/ic_import"
-        android:orderInCategory="3"
+        android:orderInCategory="2"
         app:showAsAction="ifRoom" />
+
+    <item
+        android:id="@+id/action_export_location_json"
+        android:title="@string/export_location_json"
+        android:icon="@drawable/ic_export"
+        android:orderInCategory="3"
+        app:showAsAction="never" />
 
     <item
         android:id="@+id/action_copy_location_prompt"
