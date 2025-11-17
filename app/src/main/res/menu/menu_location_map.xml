@@ -6,30 +6,35 @@
         android:id="@+id/action_export_location_json"
         android:title="@string/export_location_json"
         android:icon="@drawable/ic_export"
+        android:orderInCategory="1"
         app:showAsAction="ifRoom" />
 
     <item
         android:id="@+id/action_export_location_csv"
         android:title="@string/export_location_csv"
         android:icon="@drawable/ic_export_csv"
+        android:orderInCategory="2"
         app:showAsAction="ifRoom" />
 
     <item
         android:id="@+id/action_import_locations"
         android:title="@string/import_locations"
         android:icon="@drawable/ic_import"
+        android:orderInCategory="3"
         app:showAsAction="ifRoom" />
 
     <item
         android:id="@+id/action_copy_location_prompt"
         android:title="@string/copy_llm_prompt"
         android:icon="@drawable/ic_copy"
+        android:orderInCategory="4"
         app:showAsAction="never" />
 
     <item
         android:id="@+id/action_settings"
         android:icon="@drawable/ic_settings"
         android:title="@string/settings"
+        android:orderInCategory="5"
         app:showAsAction="ifRoom" />
 
 </menu>
