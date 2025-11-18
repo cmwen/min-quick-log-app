@@ -3,6 +3,7 @@ package com.example.minandroidapp.ui.entries
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.view.Menu
 import android.view.MenuItem
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
@@ -116,6 +117,11 @@ class EntriesOverviewActivity : AppCompatActivity(), EntryActionHandler {
                 updateEntrySelectionUi(ids.size)
             }
         }
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        menuInflater.inflate(R.menu.menu_entries_overview, menu)
+        return true
     }
 
     private fun navigateBackToMain() {

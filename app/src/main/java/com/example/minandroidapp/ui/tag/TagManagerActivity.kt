@@ -6,6 +6,7 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.view.Menu
 import android.view.MenuItem
 import androidx.activity.addCallback
 import androidx.activity.result.contract.ActivityResultContracts
@@ -54,6 +55,12 @@ class TagManagerActivity : AppCompatActivity() {
     private val viewModel: TagManagerViewModel by viewModels {
         TagManagerViewModel.Factory(QuickLogRepository(LogDatabase.getInstance(applicationContext)))
     }
+
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        menuInflater.inflate(R.menu.menu_tag_manager, menu)
+        return true
+    }
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         ThemeManager.applySavedTheme(this)
