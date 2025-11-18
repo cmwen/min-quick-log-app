@@ -31,4 +31,9 @@
         android:title="@string/settings"
         android:orderInCategory="5"
         app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/action_about"
+        android:title="@string/about_app"
+        android:orderInCategory="6"
+        app:showAsAction="never" />
 </menu>

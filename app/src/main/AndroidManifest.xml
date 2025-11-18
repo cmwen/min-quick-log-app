@@ -27,7 +27,8 @@
 
         <activity
             android:name="com.example.minandroidapp.ui.tag.TagManagerActivity"
-            android:exported="true">
+            android:exported="true"
+            android:label="@string/manage_tags">
             <intent-filter>
                 <action android:name="android.intent.action.SEND" />
                 <category android:name="android.intent.category.DEFAULT" />
@@ -46,7 +47,8 @@
 
         <activity
             android:name="com.example.minandroidapp.ui.entries.EntriesOverviewActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:label="@string/entries_overview" />
 
         <activity
             android:name="com.example.minandroidapp.settings.SettingsActivity"

@@ -79,6 +79,10 @@ class EntriesOverviewActivity : AppCompatActivity(), EntryActionHandler {
                     startActivity(Intent(this, com.example.minandroidapp.settings.SettingsActivity::class.java))
                     true
                 }
+                R.id.action_about -> {
+                    showAboutDialog()
+                    true
+                }
                 else -> false
             }
         }
@@ -215,6 +219,23 @@ class EntriesOverviewActivity : AppCompatActivity(), EntryActionHandler {
         }
         // Note: Import functionality would need to be implemented in the ViewModel
         Snackbar.make(binding.root, getString(R.string.import_entries_success, 0), Snackbar.LENGTH_LONG).show()
+    }
+
+    private fun showAboutDialog() {
+        val versionName = packageManager.getPackageInfo(packageName, 0).versionName
+        val versionCode = if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.P) {
+            packageManager.getPackageInfo(packageName, 0).longVersionCode.toInt()
+        } else {
+            @Suppress("DEPRECATION")
+            packageManager.getPackageInfo(packageName, 0).versionCode
+        }
+        val versionString = getString(R.string.app_version, versionName, versionCode)
+        
+        MaterialAlertDialogBuilder(this)
+            .setTitle(R.string.about_app)
+            .setMessage("${getString(R.string.about_message)}\n\n$versionString")
+            .setPositiveButton(android.R.string.ok, null)
+            .show()
     }
 }
 
