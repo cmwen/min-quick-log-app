@@ -57,8 +57,7 @@ name: "CI Failure Doctor"
     types:
     - completed
     workflows:
-    - Daily Perf Improver
-    - Daily Test Coverage Improver
+    - Android CI
 
 permissions: read-all
 
