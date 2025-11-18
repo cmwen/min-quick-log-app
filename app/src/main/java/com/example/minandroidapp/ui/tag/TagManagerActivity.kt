@@ -103,6 +103,10 @@ class TagManagerActivity : AppCompatActivity() {
                     copyTagPrompt()
                     true
                 }
+                R.id.action_about -> {
+                    showAboutDialog()
+                    true
+                }
                 else -> false
             }
         }
@@ -410,5 +414,22 @@ class TagManagerActivity : AppCompatActivity() {
         val clip = ClipData.newPlainText(getString(R.string.copy_llm_prompt), getString(R.string.tag_llm_prompt))
         clipboard.setPrimaryClip(clip)
         Snackbar.make(binding.root, R.string.copy_llm_prompt_done, Snackbar.LENGTH_SHORT).show()
+    }
+
+    private fun showAboutDialog() {
+        val versionName = packageManager.getPackageInfo(packageName, 0).versionName
+        val versionCode = if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.P) {
+            packageManager.getPackageInfo(packageName, 0).longVersionCode.toInt()
+        } else {
+            @Suppress("DEPRECATION")
+            packageManager.getPackageInfo(packageName, 0).versionCode
+        }
+        val versionString = getString(R.string.app_version, versionName, versionCode)
+        
+        MaterialAlertDialogBuilder(this)
+            .setTitle(R.string.about_app)
+            .setMessage("${getString(R.string.about_message)}\n\n$versionString")
+            .setPositiveButton(android.R.string.ok, null)
+            .show()
     }
 }
