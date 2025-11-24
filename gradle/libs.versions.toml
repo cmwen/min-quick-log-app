@@ -21,7 +21,7 @@ osmdroid = "6.1.18"
 mockk = "1.13.12"
 coroutinesTest = "1.10.2"
 archCoreTesting = "2.2.0"
-turbine = "1.1.0"
+turbine = "1.2.1"
 
 [libraries]
 core-ktx = { module = "androidx.core:core-ktx", version.ref = "coreKtx" }
