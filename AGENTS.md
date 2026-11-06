@@ -41,3 +41,5 @@ This repository includes machine-readable and human-readable context to help AI 
 ## Build compatibility
 
 Use AGP 8.9.1 with the checked-in Gradle 8.11.1 wrapper and Java 17. AndroidX activity 1.12/core 1.17 require AGP 8.9.1 or newer. Do not roll AGP back to 8.3. AGP 9 updates need a coordinated wrapper and Kotlin migration.
+
+Android SDK setup uses the setup-android `packages` input with platform-tools, platforms;android-36 and build-tools;35.0.0. Its default includes the retired tools package; do not rely on that default or unsupported api-level/build-tools/target/cache inputs.

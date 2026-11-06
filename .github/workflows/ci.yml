@@ -17,8 +17,8 @@ jobs:
     timeout-minutes: 40
     env:
       JAVA_VERSION: "17"
-      ANDROID_API_LEVEL: "34"
-      ANDROID_BUILD_TOOLS: "34.0.0"
+      ANDROID_API_LEVEL: "36"
+      ANDROID_BUILD_TOOLS: "35.0.0"
 
     steps:
       - name: Checkout repository
@@ -33,10 +33,7 @@ jobs:
       - name: Setup Android SDK
         uses: android-actions/setup-android@v3
         with:
-          api-level: ${{ env.ANDROID_API_LEVEL }}
-          build-tools: ${{ env.ANDROID_BUILD_TOOLS }}
-          target: android-${{ env.ANDROID_API_LEVEL }}
-          cache: true
+          packages: 'platform-tools platforms;android-${{ env.ANDROID_API_LEVEL }} build-tools;${{ env.ANDROID_BUILD_TOOLS }}'
 
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v5
