@@ -19,7 +19,7 @@ desugar = "2.1.5"
 fragmentKtx = "1.8.9"
 osmdroid = "6.1.20"
 mockk = "1.13.12"
-coroutinesTest = "1.10.2"
+coroutinesTest = "1.11.0"
 archCoreTesting = "2.2.0"
 turbine = "1.2.1"
 
