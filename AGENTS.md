@@ -37,3 +37,7 @@ This repository includes machine-readable and human-readable context to help AI 
 - Never commit files from `build/`, `*.keystore`, or other sensitive artifacts.
 - Use the provided scripts (`scripts/`) for generating or rotating signing material.
 - When unsure about requirements, prefer asking for clarification by opening an issue or drafting a PR with questions.
+
+## Build compatibility
+
+Use AGP 8.9.1 with the checked-in Gradle 8.11.1 wrapper and Java 17. AndroidX activity 1.12/core 1.17 require AGP 8.9.1 or newer. Do not roll AGP back to 8.3. AGP 9 updates need a coordinated wrapper and Kotlin migration.
